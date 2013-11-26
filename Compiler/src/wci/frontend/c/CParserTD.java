@@ -2,8 +2,9 @@ package wci.frontend.c;
 
 import wci.frontend.*;
 import wci.message.Message;
-
-import static wci.message.MessageType.PARSER_SUMMARY;
+import static wci.frontend.c.CErrorCode.*;
+import static wci.frontend.c.CTokenType.*;
+import static wci.message.MessageType.*;
 
 /**
  * <h1>CParserTD</h1>
@@ -15,6 +16,8 @@ import static wci.message.MessageType.PARSER_SUMMARY;
  */
 public class CParserTD extends Parser
 {
+    protected static CErrorHandler errorHandler = new CErrorHandler();
+
     /**
      * Constructor.
      * @param scanner the scanner to be used with this parser.
@@ -34,14 +37,38 @@ public class CParserTD extends Parser
         Token token;
         long startTime = System.currentTimeMillis();
 
-        while (!((token = nextToken()) instanceof EofToken)) {}
+        try {
+            // Loop over each token until the end of file.
+            while (!((token = nextToken()) instanceof EofToken)) {
+                TokenType tokenType = token.getType();
 
-        // Send the parser summary message.
-        float elapsedTime = (System.currentTimeMillis() - startTime)/1000f;
-        sendMessage(new Message(PARSER_SUMMARY,
-                                new Number[] {token.getLineNumber(),
-                                              getErrorCount(),
-                                              elapsedTime}));
+                if (tokenType != ERROR) {
+
+                    // Format each token.
+                    sendMessage(new Message(TOKEN,
+                                            new Object[] {token.getLineNumber(),
+                                                          token.getPosition(),
+                                                          tokenType,
+                                                          token.getText(),
+                                                          token.getValue()}));
+                }
+                else {
+                    errorHandler.flag(token, (CErrorCode) token.getValue(),
+                                      this);
+                }
+
+            }
+
+            // Send the parser summary message.
+            float elapsedTime = (System.currentTimeMillis() - startTime)/1000f;
+            sendMessage(new Message(PARSER_SUMMARY,
+                                    new Number[] {token.getLineNumber(),
+                                                  getErrorCount(),
+                                                  elapsedTime}));
+        }
+        catch (java.io.IOException ex) {
+            errorHandler.abortTranslation(IO_ERROR, this);
+        }
     }
 
     /**
@@ -50,6 +77,6 @@ public class CParserTD extends Parser
      */
     public int getErrorCount()
     {
-        return 0;
+        return errorHandler.getErrorCount();
     }
 }

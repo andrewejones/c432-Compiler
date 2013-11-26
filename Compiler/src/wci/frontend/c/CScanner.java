@@ -1,7 +1,10 @@
 package wci.frontend.c;
 
 import wci.frontend.*;
+import wci.frontend.c.tokens.*;
 import static wci.frontend.Source.EOF;
+import static wci.frontend.c.CErrorCode.*;
+import static wci.frontend.c.CTokenType.*;
 
 /**
  * <h1>CScanner</h1>
@@ -30,6 +33,8 @@ public class CScanner extends Scanner
     protected Token extractToken()
         throws Exception
     {
+        skipWhiteSpace();
+
         Token token;
         char currentChar = currentChar();
 
@@ -38,10 +43,61 @@ public class CScanner extends Scanner
         if (currentChar == EOF) {
             token = new EofToken(source);
         }
+        else if (Character.isLetter(currentChar)) {
+            token = new CWordToken(source);
+        }
+        else if (Character.isDigit(currentChar)) {
+            token = new CNumberToken(source);
+        }
+        else if (currentChar == '\'') {
+            token = new CCharToken(source);
+        }
+        else if (CTokenType.SPECIAL_SYMBOLS
+                 .containsKey(Character.toString(currentChar))) {
+            token = new CSpecialSymbolToken(source);
+        }
         else {
-            token = new Token(source);
+            token = new CErrorToken(source, INVALID_CHARACTER,
+                                         Character.toString(currentChar));
+            nextChar();  // consume character
         }
 
         return token;
+    }
+
+    /**
+     * Skip whitespace characters by consuming them.  A comment is whitespace.
+     * @throws Exception if an error occurred.
+     */
+    private void skipWhiteSpace()
+        throws Exception
+    {
+        char currentChar = currentChar();
+        char peekChar = peekChar();
+		// check for white space and comments
+		while (Character.isWhitespace(currentChar) || (currentChar == '/' && peekChar == '/') || (currentChar == '/' && peekChar == '*')) {
+			// is it a // comment?
+			if (currentChar == '/' && peekChar == '/')
+				do
+					currentChar = nextChar(); // consume comment characters
+				while ((currentChar != '\n') && (currentChar != EOF));
+			// is it a /* comment?
+			else if (currentChar == '/' && peekChar == '*') {
+				currentChar = nextChar(); // consume first / character
+				do {
+					currentChar = nextChar(); // consume comment characters
+					peekChar = peekChar(); // update peek
+				} while (!(currentChar == '*' && peekChar == '/') && (currentChar != EOF));
+				if (currentChar == '*') {
+					currentChar = nextChar(); // consume the '*'
+					currentChar = nextChar(); // consume the '/'
+				}
+			}
+			// not a comment
+			else
+				currentChar = nextChar(); // consume whitespace character
+			if (currentChar != EOF)
+				peekChar = peekChar();
+		}
     }
 }
