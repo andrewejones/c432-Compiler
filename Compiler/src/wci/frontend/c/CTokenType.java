@@ -20,9 +20,10 @@ public enum CTokenType implements TokenType
 
     // Special symbols.
     PLUS("+"), MINUS("-"), STAR("*"), SLASH("/"), MOD("%"),
+    AND("&&"), OR("||"),
     DOT("."), COMMA(","), SEMICOLON(";"), SINGLE_QUOTE("'"),
     LEFT_PAREN("("), RIGHT_PAREN(")"), LEFT_BRACKET("["), RIGHT_BRACKET("]"), LEFT_BRACE("{"), RIGHT_BRACE("}"),
-    ASSIGN("="), EQUALS("=="), NOT("!"), NOT_EQUALS("!="), LESS_THAN("<"), LESS_EQUALS("<="),  GREATER_THAN(">"), GREATER_EQUALS(">="),
+    SINGLE_EQUALS("="), DOUBLE_EQUALS("=="), NOT("!"), NOT_EQUALS("!="), LESS_THAN("<"), LESS_EQUALS("<="),  GREATER_THAN(">"), GREATER_EQUALS(">="),
     
     CHAR, IDENTIFIER, INTEGER, REAL,
     ERROR, END_OF_FILE;

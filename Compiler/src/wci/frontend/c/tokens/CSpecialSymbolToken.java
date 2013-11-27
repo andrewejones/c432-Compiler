@@ -71,6 +71,36 @@ public class CSpecialSymbolToken extends CToken
 
                 break;
             }
+            
+            // &&
+            case '&': {
+                currentChar = nextChar();  // consume '&';
+
+                if (currentChar == '&') {
+                    text += currentChar;
+                    nextChar();  // consume '&'
+                } else {
+                    type = ERROR;
+                    value = INVALID_CHARACTER;
+                }
+
+                break;
+            }
+            
+            // ||
+            case '|': {
+                currentChar = nextChar();  // consume '|';
+
+                if (currentChar == '|') {
+                    text += currentChar;
+                    nextChar();  // consume '|'
+                } else {
+                    type = ERROR;
+                    value = INVALID_CHARACTER;
+                }
+
+                break;
+            }
 
             // < or <=
             case '<': {
