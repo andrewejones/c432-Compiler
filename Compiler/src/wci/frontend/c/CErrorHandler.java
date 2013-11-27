@@ -2,8 +2,9 @@ package wci.frontend.c;
 
 import wci.frontend.*;
 import wci.message.Message;
-import static wci.frontend.c.CErrorCode.*;
+
 import static wci.frontend.c.CTokenType.*;
+import static wci.frontend.c.CErrorCode.*;
 import static wci.message.MessageType.SYNTAX_ERROR;
 
 /**

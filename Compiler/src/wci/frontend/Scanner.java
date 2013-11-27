@@ -73,15 +73,15 @@ public abstract class Scanner
     {
         return source.nextChar();
     }
-    
+
     /**
      * Call the source's peekChar() method.
-     * @return the next (peeked) character from the source.
+     * @return the next character from the source.
      * @throws Exception if an error occurred.
      */
     public char peekChar()
         throws Exception
     {
-        return source.peekChar();
+        return source.nextChar();
     }
 }

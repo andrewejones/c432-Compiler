@@ -3,6 +3,7 @@ package wci.frontend.c;
 import wci.frontend.*;
 import wci.frontend.c.tokens.*;
 import static wci.frontend.Source.EOF;
+import static wci.frontend.Source.EOL;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.frontend.c.CTokenType.*;
 
@@ -73,31 +74,29 @@ public class CScanner extends Scanner
         throws Exception
     {
         char currentChar = currentChar();
-        char peekChar = peekChar();
-		// check for white space and comments
-		while (Character.isWhitespace(currentChar) || (currentChar == '/' && peekChar == '/') || (currentChar == '/' && peekChar == '*')) {
-			// is it a // comment?
-			if (currentChar == '/' && peekChar == '/')
-				do
-					currentChar = nextChar(); // consume comment characters
-				while ((currentChar != '\n') && (currentChar != EOF));
-			// is it a /* comment?
-			else if (currentChar == '/' && peekChar == '*') {
-				currentChar = nextChar(); // consume first / character
-				do {
-					currentChar = nextChar(); // consume comment characters
-					peekChar = peekChar(); // update peek
-				} while (!(currentChar == '*' && peekChar == '/') && (currentChar != EOF));
-				if (currentChar == '*') {
-					currentChar = nextChar(); // consume the '*'
-					currentChar = nextChar(); // consume the '/'
-				}
-			}
-			// not a comment
-			else
-				currentChar = nextChar(); // consume whitespace character
-			if (currentChar != EOF)
-				peekChar = peekChar();
-		}
+        char peekChar;
+        
+        while (Character.isWhitespace(currentChar) || currentChar == '/') {
+        	if (Character.isWhitespace(currentChar)) { // just whitespace, consume and move on
+        		currentChar = nextChar();
+        	} else { // comment
+        		peekChar = peekChar();
+        		if (peekChar == '/') { // single line
+        			while (currentChar != EOF && currentChar != EOL)
+        				currentChar = nextChar();
+        		} else if (peekChar == '*') { // multi-line
+        			currentChar = nextChar(); // current now *
+        			currentChar = nextChar(); // current now a new char
+        			if (currentChar != EOF)
+        				peekChar = peekChar(); // peek after new char
+        			while (currentChar != EOF && (currentChar != '*' && peekChar != '/')) {
+            			currentChar = nextChar();
+            			if (currentChar != EOF)
+            				peekChar = peekChar(); // peek after new char
+        			}
+        		}
+        		
+        	}
+        }
     }
 }

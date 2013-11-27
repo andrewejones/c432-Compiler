@@ -1,10 +1,13 @@
 package wci.frontend.c;
 
 import wci.frontend.*;
-import wci.message.Message;
-import static wci.frontend.c.CErrorCode.*;
+import wci.intermediate.*;
+import wci.message.*;
+
 import static wci.frontend.c.CTokenType.*;
-import static wci.message.MessageType.*;
+import static wci.frontend.c.CErrorCode.*;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.message.MessageType.PARSER_SUMMARY;
 
 /**
  * <h1>CParserTD</h1>
@@ -42,21 +45,25 @@ public class CParserTD extends Parser
             while (!((token = nextToken()) instanceof EofToken)) {
                 TokenType tokenType = token.getType();
 
-                if (tokenType != ERROR) {
+                // Cross reference only the identifiers.
+                if (tokenType == IDENTIFIER) {
+                    String name = token.getText().toLowerCase();
 
-                    // Format each token.
-                    sendMessage(new Message(TOKEN,
-                                            new Object[] {token.getLineNumber(),
-                                                          token.getPosition(),
-                                                          tokenType,
-                                                          token.getText(),
-                                                          token.getValue()}));
+                    // If it's not already in the symbol table,
+                    // create and enter a new entry for the identifier.
+                    SymTabEntry entry = symTabStack.lookup(name);
+                    if (entry == null) {
+                        entry = symTabStack.enterLocal(name);
+                    }
+
+                    // Append the current line number to the entry.
+                    entry.appendLineNumber(token.getLineNumber());
                 }
-                else {
+
+                else if (tokenType == ERROR) {
                     errorHandler.flag(token, (CErrorCode) token.getValue(),
                                       this);
                 }
-
             }
 
             // Send the parser summary message.
