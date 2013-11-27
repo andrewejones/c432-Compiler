@@ -1,5 +1,7 @@
 package wci.frontend.c;
 
+import java.util.EnumSet;
+
 import wci.frontend.*;
 import wci.frontend.c.parsers.*;
 import wci.intermediate.*;
@@ -99,5 +101,34 @@ public class CParserTD extends Parser
     public int getErrorCount()
     {
         return errorHandler.getErrorCount();
+    }
+
+    /**
+     * Synchronize the parser.
+     * @param syncSet the set of token types for synchronizing the parser.
+     * @return the token where the parser has synchronized.
+     * @throws Exception if an error occurred.
+     */
+    public Token synchronize(EnumSet syncSet)
+        throws Exception
+    {
+        Token token = currentToken();
+
+        // If the current token is not in the synchronization set,
+        // then it is unexpected and the parser must recover.
+        if (!syncSet.contains(token.getType())) {
+
+            // Flag the unexpected token.
+            errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+
+            // Recover by skipping tokens that are not
+            // in the synchronization set.
+            do {
+                token = nextToken();
+            } while (!(token instanceof EofToken) &&
+                     !syncSet.contains(token.getType()));
+       }
+
+       return token;
     }
 }

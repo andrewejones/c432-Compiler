@@ -33,6 +33,11 @@ public class ExpressionParser extends StatementParser
         super(parent);
     }
 
+    // Synchronization set for starting an expression.
+    static final EnumSet<CTokenType> EXPR_START_SET =
+        EnumSet.of(PLUS, MINUS, IDENTIFIER, INT, FLOAT, CHAR,
+                   CTokenType.NOT, LEFT_PAREN);
+
     /**
      * Parse an expression.
      * @param token the initial token.
@@ -47,14 +52,14 @@ public class ExpressionParser extends StatementParser
 
     // Set of relational operators.
     private static final EnumSet<CTokenType> REL_OPS =
-        EnumSet.of(SINGLE_EQUALS, NOT_EQUALS, LESS_THAN, LESS_EQUALS,
+        EnumSet.of(DOUBLE_EQUALS, NOT_EQUALS, LESS_THAN, LESS_EQUALS,
                    GREATER_THAN, GREATER_EQUALS);
 
     // Map relational operator tokens to node types.
     private static final HashMap<CTokenType, ICodeNodeType>
         REL_OPS_MAP = new HashMap<CTokenType, ICodeNodeType>();
     static {
-        REL_OPS_MAP.put(SINGLE_EQUALS, EQ);
+        REL_OPS_MAP.put(DOUBLE_EQUALS, EQ);
         REL_OPS_MAP.put(NOT_EQUALS, NE);
         REL_OPS_MAP.put(LESS_THAN, LT);
         REL_OPS_MAP.put(LESS_EQUALS, LE);
@@ -278,8 +283,8 @@ public class ExpressionParser extends StatementParser
             }
 
             case CHAR: {
-                // Create a CHAR_CONSTANT node as the root node.
-                rootNode = ICodeFactory.createICodeNode(CHAR_CONSTANT);
+                // Create a STRING_CONSTANT node as the root node.
+                rootNode = ICodeFactory.createICodeNode(STRING_CONSTANT);
                 rootNode.setAttribute(VALUE, token.getValue());
 
                 token = nextToken();  // consume the string

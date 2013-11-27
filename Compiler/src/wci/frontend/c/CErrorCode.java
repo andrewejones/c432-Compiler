@@ -12,6 +12,7 @@ public enum CErrorCode
 {
     MISSING_EOF("Missing EOF"),
     MISSING_RIGHT_BRACE("Missing }"),
+    MISSING_LEFT_PAREN("Missing )"),
     MISSING_RIGHT_PAREN("Missing )"),
     MISSING_SEMICOLON("Missing ;"),
     MISSING_SINGLE_EQUALS("Missing ="),

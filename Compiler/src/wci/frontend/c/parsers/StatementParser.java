@@ -1,9 +1,10 @@
 package wci.frontend.c.parsers;
 
+import java.util.EnumSet;
+
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
-
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
@@ -27,6 +28,15 @@ public class StatementParser extends CParserTD
     {
         super(parent);
     }
+
+    // Synchronization set for starting a statement.
+    protected static final EnumSet<CTokenType> STMT_START_SET =
+        EnumSet.of(LEFT_BRACE, CTokenType.IF, WHILE,
+                   IDENTIFIER, SEMICOLON);
+
+    // Synchronization set for following a statement.
+    protected static final EnumSet<CTokenType> STMT_FOLLOW_SET =
+        EnumSet.of(SEMICOLON, RIGHT_BRACE, ELSE);
 
     /**
      * Parse a statement.
@@ -57,6 +67,19 @@ public class StatementParser extends CParserTD
                 break;
             }
 
+            case WHILE: {
+                WhileStatementParser whileParser =
+                    new WhileStatementParser(this);
+                statementNode = whileParser.parse(token);
+                break;
+            }
+
+            case IF: {
+                IfStatementParser ifParser = new IfStatementParser(this);
+                statementNode = ifParser.parse(token);
+                break;
+            }
+
             default: {
                 statementNode = ICodeFactory.createICodeNode(NO_OP);
                 break;
@@ -83,7 +106,7 @@ public class StatementParser extends CParserTD
 
     /**
      * Parse a statement list.
-     * @param token the curent token.
+     * @param token the current token.
      * @param parentNode the parent node of the statement list.
      * @param terminator the token type of the node that terminates the list.
      * @param errorCode the error code if the terminator token is missing.
@@ -94,6 +117,10 @@ public class StatementParser extends CParserTD
                              CErrorCode errorCode)
         throws Exception
     {
+        // Synchronization set for the terminator.
+        EnumSet<CTokenType> terminatorSet = STMT_START_SET.clone();
+        terminatorSet.add(terminator);
+
         // Loop to parse each statement until the RIGHT_BRACE token
         // or the end of the source file.
         while (!(token instanceof EofToken) &&
@@ -111,17 +138,14 @@ public class StatementParser extends CParserTD
                 token = nextToken();  // consume the ;
             }
 
-            // If at the start of the next assignment statement,
-            // then missing a semicolon.
-            else if (tokenType == IDENTIFIER) {
+            // If at the start of the next statement, then missing a semicolon.
+            else if (STMT_START_SET.contains(tokenType)) {
                 errorHandler.flag(token, MISSING_SEMICOLON, this);
             }
 
-            // Unexpected token.
-            else if (tokenType != terminator) {
-                errorHandler.flag(token, UNEXPECTED_TOKEN, this);
-                token = nextToken();  // consume the unexpected token
-            }
+            // Synchronize at the start of the next statement
+            // or at the terminator.
+            token = synchronize(terminatorSet);
         }
 
         // Look for the terminator token.
