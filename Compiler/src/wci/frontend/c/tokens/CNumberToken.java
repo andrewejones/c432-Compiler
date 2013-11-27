@@ -51,7 +51,7 @@ public class CNumberToken extends CToken
         String fractionDigits = null;  // digits after the decimal point
         char currentChar;              // current character
 
-        type = INTEGER;  // assume INTEGER token type for now
+        type = INT;  // assume INTEGER token type for now
 
         // Extract the digits of the whole part of the number.
         wholeDigits = unsignedIntegerDigits(textBuffer);
@@ -62,7 +62,7 @@ public class CNumberToken extends CToken
         // Is there a . ?
         currentChar = currentChar();
         if (currentChar == '.') {
-            type = REAL;  // decimal point, so token type is REAL
+            type = FLOAT;  // decimal point, so token type is REAL
             textBuffer.append(currentChar);
             currentChar = nextChar();  // consume decimal point
 
@@ -76,7 +76,7 @@ public class CNumberToken extends CToken
         currentChar = currentChar();
 
         // Compute the value of an integer number token.
-        if (type == INTEGER) {
+        if (type == INT) {
             int integerValue = computeIntegerValue(wholeDigits);
 
             if (type != ERROR) {
@@ -85,9 +85,8 @@ public class CNumberToken extends CToken
         }
 
         // Compute the value of a real number token.
-        else if (type == REAL) {
+        else if (type == FLOAT) {
             float floatValue = computeFloatValue(wholeDigits, fractionDigits);
-
             if (type != ERROR) {
                 value = new Float(floatValue);
             }
@@ -169,14 +168,34 @@ public class CNumberToken extends CToken
      */
     private float computeFloatValue(String wholeDigits, String fractionDigits)
     {
-        double floatValue = 0.0;
+    	double floatValue = 0.0;
+        int exponentValue = 0;
         String digits = wholeDigits;  // whole and fraction digits
+
+        // If there are any fraction digits, adjust the exponent value
+        // and append the fraction digits.
+        if (fractionDigits != null) {
+            exponentValue -= fractionDigits.length();
+            digits += fractionDigits;
+        }
+
+        // Check for a real number out of range error.
+        if (Math.abs(exponentValue + wholeDigits.length()) > 37) {
+            type = ERROR;
+            value = RANGE_REAL;
+            return 0.0f;
+        }
 
         // Loop over the digits to compute the float value.
         int index = 0;
         while (index < digits.length()) {
             floatValue = 10*floatValue +
                          Character.getNumericValue(digits.charAt(index++));
+        }
+
+        // Adjust the float value based on the exponent value.
+        if (exponentValue != 0) {
+            floatValue *= Math.pow(10, exponentValue);
         }
 
         return (float) floatValue;

@@ -25,7 +25,7 @@ public enum CTokenType implements TokenType
     LEFT_PAREN("("), RIGHT_PAREN(")"), LEFT_BRACKET("["), RIGHT_BRACKET("]"), LEFT_BRACE("{"), RIGHT_BRACE("}"),
     SINGLE_EQUALS("="), DOUBLE_EQUALS("=="), NOT("!"), NOT_EQUALS("!="), LESS_THAN("<"), LESS_EQUALS("<="),  GREATER_THAN(">"), GREATER_EQUALS(">="),
     
-    CHAR, IDENTIFIER, INTEGER, REAL,
+    CHAR, IDENTIFIER, INT, FLOAT,
     ERROR, END_OF_FILE;
 
     private static final int FIRST_RESERVED_INDEX = CONST.ordinal();

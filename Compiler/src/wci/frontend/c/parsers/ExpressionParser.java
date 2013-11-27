@@ -259,7 +259,7 @@ public class ExpressionParser extends StatementParser
                 break;
             }
 
-            case INTEGER: {
+            case INT: {
                 // Create an INTEGER_CONSTANT node as the root node.
                 rootNode = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
                 rootNode.setAttribute(VALUE, token.getValue());
@@ -268,7 +268,7 @@ public class ExpressionParser extends StatementParser
                 break;
             }
 
-            case REAL: {
+            case FLOAT: {
                 // Create an REAL_CONSTANT node as the root node.
                 rootNode = ICodeFactory.createICodeNode(REAL_CONSTANT);
                 rootNode.setAttribute(VALUE, token.getValue());
