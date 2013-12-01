@@ -253,10 +253,10 @@ public class ConstantDefinitionsParser extends DeclarationsParser
         TypeSpec constantType = null;
 
         if (value instanceof Integer) {
-            constantType = Predefined.intType;
+            constantType = Predefined.integerType;
         }
         else if (value instanceof Float) {
-            constantType = Predefined.floatType;
+            constantType = Predefined.realType;
         }
         else if (value instanceof Character) {
             constantType = Predefined.charType;

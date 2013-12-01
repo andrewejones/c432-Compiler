@@ -43,7 +43,7 @@ public class TypeSpecImpl
         this.form = ARRAY;
 
         TypeSpec indexType = new TypeSpecImpl(SUBRANGE);
-        indexType.setAttribute(SUBRANGE_BASE_TYPE, Predefined.intType);
+        indexType.setAttribute(SUBRANGE_BASE_TYPE, Predefined.integerType);
         indexType.setAttribute(SUBRANGE_MIN_VALUE, 1);
         indexType.setAttribute(SUBRANGE_MAX_VALUE, value.length());
 
@@ -109,7 +109,7 @@ public class TypeSpecImpl
             TypeSpec indexType = (TypeSpec) getAttribute(ARRAY_INDEX_TYPE);
 
             return (elmtType.baseType()  == Predefined.charType) &&
-                   (indexType.baseType() == Predefined.intType);
+                   (indexType.baseType() == Predefined.integerType);
         }
         else {
             return false;

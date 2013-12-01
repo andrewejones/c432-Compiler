@@ -24,7 +24,7 @@ public class TypeChecker
      */
     public static boolean isInteger(TypeSpec type)
     {
-        return (type != null) && (type.baseType() == Predefined.intType);
+        return (type != null) && (type.baseType() == Predefined.integerType);
     }
 
     /**
@@ -45,7 +45,7 @@ public class TypeChecker
      */
     public static boolean isReal(TypeSpec type)
     {
-        return (type != null) && (type.baseType() == Predefined.floatType);
+        return (type != null) && (type.baseType() == Predefined.realType);
     }
 
     /**
@@ -78,7 +78,7 @@ public class TypeChecker
      */
     public static boolean isBoolean(TypeSpec type)
     {
-        return (type != null) && (type.baseType() == Predefined.boolType);
+        return (type != null) && (type.baseType() == Predefined.booleanType);
     }
 
     /**

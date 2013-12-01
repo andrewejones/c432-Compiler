@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 
+import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
 import static wci.intermediate.typeimpl.TypeFormImpl.*;
 import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 
@@ -21,19 +23,23 @@ import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 public class Predefined
 {
     // Predefined types.
-    public static TypeSpec intType;
-    public static TypeSpec floatType;
-    public static TypeSpec boolType;
+    public static TypeSpec integerType;
+    public static TypeSpec realType;
+    public static TypeSpec booleanType;
     public static TypeSpec charType;
     public static TypeSpec undefinedType;
 
     // Predefined identifiers.
-    public static SymTabEntry intId;
-    public static SymTabEntry floatId;
-    public static SymTabEntry boolId;
+    public static SymTabEntry integerId;
+    public static SymTabEntry realId;
+    public static SymTabEntry booleanId;
     public static SymTabEntry charId;
     public static SymTabEntry falseId;
     public static SymTabEntry trueId;
+    public static SymTabEntry readId;
+    public static SymTabEntry readlnId;
+    public static SymTabEntry writeId;
+    public static SymTabEntry writelnId;
 
     /**
      * Initialize a symbol table stack with predefined identifiers.
@@ -43,6 +49,7 @@ public class Predefined
     {
         initializeTypes(symTabStack);
         initializeConstants(symTabStack);
+        initializeStandardRoutines(symTabStack);
     }
 
     /**
@@ -52,25 +59,25 @@ public class Predefined
     private static void initializeTypes(SymTabStack symTabStack)
     {
         // Type integer.
-        intId = symTabStack.enterLocal("int");
-        intType = TypeFactory.createType(SCALAR);
-        intType.setIdentifier(intId);
-        intId.setDefinition(DefinitionImpl.TYPE);
-        intId.setTypeSpec(intType);
+        integerId = symTabStack.enterLocal("int");
+        integerType = TypeFactory.createType(SCALAR);
+        integerType.setIdentifier(integerId);
+        integerId.setDefinition(DefinitionImpl.TYPE);
+        integerId.setTypeSpec(integerType);
 
         // Type real.
-        floatId = symTabStack.enterLocal("float");
-        floatType = TypeFactory.createType(SCALAR);
-        floatType.setIdentifier(floatId);
-        floatId.setDefinition(DefinitionImpl.TYPE);
-        floatId.setTypeSpec(floatType);
+        realId = symTabStack.enterLocal("float");
+        realType = TypeFactory.createType(SCALAR);
+        realType.setIdentifier(realId);
+        realId.setDefinition(DefinitionImpl.TYPE);
+        realId.setTypeSpec(realType);
 
         // Type boolean.
-        boolId = symTabStack.enterLocal("bool");
-        boolType = TypeFactory.createType(ENUMERATION);
-        boolType.setIdentifier(boolId);
-        boolId.setDefinition(DefinitionImpl.TYPE);
-        boolId.setTypeSpec(boolType);
+        booleanId = symTabStack.enterLocal("bool");
+        booleanType = TypeFactory.createType(ENUMERATION);
+        booleanType.setIdentifier(booleanId);
+        booleanId.setDefinition(DefinitionImpl.TYPE);
+        booleanId.setTypeSpec(booleanType);
 
         // Type char.
         charId = symTabStack.enterLocal("char");
@@ -92,19 +99,48 @@ public class Predefined
         // Boolean enumeration constant false.
         falseId = symTabStack.enterLocal("false");
         falseId.setDefinition(DefinitionImpl.ENUMERATION_CONSTANT);
-        falseId.setTypeSpec(boolType);
+        falseId.setTypeSpec(booleanType);
         falseId.setAttribute(CONSTANT_VALUE, new Integer(0));
 
         // Boolean enumeration constant true.
         trueId = symTabStack.enterLocal("true");
         trueId.setDefinition(DefinitionImpl.ENUMERATION_CONSTANT);
-        trueId.setTypeSpec(boolType);
+        trueId.setTypeSpec(booleanType);
         trueId.setAttribute(CONSTANT_VALUE, new Integer(1));
 
         // Add false and true to the boolean enumeration type.
         ArrayList<SymTabEntry> constants = new ArrayList<SymTabEntry>();
         constants.add(falseId);
         constants.add(trueId);
-        boolType.setAttribute(ENUMERATION_CONSTANTS, constants);
+        booleanType.setAttribute(ENUMERATION_CONSTANTS, constants);
+    }
+
+    /**
+     * Initialize the standard procedures and functions.
+     * @param symTabStack the symbol table stack to initialize.
+     */
+    private static void initializeStandardRoutines(SymTabStack symTabStack)
+    {
+        readId    = enterStandard(symTabStack, PROCEDURE, "read",    READ);
+        readlnId  = enterStandard(symTabStack, PROCEDURE, "readln",  READLN);
+        writeId   = enterStandard(symTabStack, PROCEDURE, "write",   WRITE);
+        writelnId = enterStandard(symTabStack, PROCEDURE, "writeln", WRITELN);
+    }
+
+    /**
+     * Enter a standard procedure or function into the symbol table stack.
+     * @param symTabStack the symbol table stack to initialize.
+     * @param defn either PROCEDURE or FUNCTION.
+     * @param name the procedure or function name.
+     */
+    private static SymTabEntry enterStandard(SymTabStack symTabStack,
+                                             Definition defn, String name,
+                                             RoutineCode routineCode)
+    {
+        SymTabEntry procId = symTabStack.enterLocal(name);
+        procId.setDefinition(defn);
+        procId.setAttribute(ROUTINE_CODE, routineCode);
+
+        return procId;
     }
 }

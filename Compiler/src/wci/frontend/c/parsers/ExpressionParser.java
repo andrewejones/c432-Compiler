@@ -112,7 +112,7 @@ public class ExpressionParser extends StatementParser
                                        ? simExprNode.getTypeSpec()
                                        : Predefined.undefinedType;
             if (TypeChecker.areComparisonCompatible(resultType, simExprType)) {
-                resultType = Predefined.boolType;
+                resultType = Predefined.booleanType;
             }
             else {
                 errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
@@ -213,14 +213,14 @@ public class ExpressionParser extends StatementParser
                 case MINUS: {
                     // Both operands integer ==> integer result.
                     if (TypeChecker.areBothInteger(resultType, termType)) {
-                        resultType = Predefined.intType;
+                        resultType = Predefined.integerType;
                     }
 
                     // Both real operands or one real and one integer operand
                     // ==> real result.
                     else if (TypeChecker.isAtLeastOneReal(resultType,
                                                           termType)) {
-                        resultType = Predefined.floatType;
+                        resultType = Predefined.realType;
                     }
 
                     else {
@@ -233,7 +233,7 @@ public class ExpressionParser extends StatementParser
                 case OR: {
                     // Both operands boolean ==> boolean result.
                     if (TypeChecker.areBothBoolean(resultType, termType)) {
-                        resultType = Predefined.boolType;
+                        resultType = Predefined.booleanType;
                     }
                     else {
                         errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
@@ -312,14 +312,14 @@ public class ExpressionParser extends StatementParser
                 case STAR: {
                     // Both operands integer ==> integer result.
                     if (TypeChecker.areBothInteger(resultType, factorType)) {
-                        resultType = Predefined.intType;
+                        resultType = Predefined.integerType;
                     }
 
                     // Both real operands or one real and one integer operand
                     // ==> real result.
                     else if (TypeChecker.isAtLeastOneReal(resultType,
                                                           factorType)) {
-                        resultType = Predefined.floatType;
+                        resultType = Predefined.realType;
                     }
 
                     else {
@@ -335,7 +335,7 @@ public class ExpressionParser extends StatementParser
                     if (TypeChecker.areBothInteger(resultType, factorType) ||
                         TypeChecker.isAtLeastOneReal(resultType, factorType))
                     {
-                        resultType = Predefined.floatType;
+                        resultType = Predefined.realType;
                     }
                     else {
                         errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
@@ -347,7 +347,7 @@ public class ExpressionParser extends StatementParser
                 case MOD: {
                     // Both operands integer ==> integer result.
                     if (TypeChecker.areBothInteger(resultType, factorType)) {
-                        resultType = Predefined.intType;
+                        resultType = Predefined.integerType;
                     }
                     else {
                         errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
@@ -359,7 +359,7 @@ public class ExpressionParser extends StatementParser
                 case AND: {
                     // Both operands boolean ==> boolean result.
                     if (TypeChecker.areBothBoolean(resultType, factorType)) {
-                        resultType = Predefined.boolType;
+                        resultType = Predefined.booleanType;
                     }
                     else {
                         errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
@@ -403,7 +403,7 @@ public class ExpressionParser extends StatementParser
 
                 token = nextToken();  // consume the number
 
-                rootNode.setTypeSpec(Predefined.intType);
+                rootNode.setTypeSpec(Predefined.integerType);
                 break;
             }
 
@@ -414,7 +414,7 @@ public class ExpressionParser extends StatementParser
 
                 token = nextToken();  // consume the number
 
-                rootNode.setTypeSpec(Predefined.floatType);
+                rootNode.setTypeSpec(Predefined.realType);
                 break;
             }
 
@@ -448,7 +448,7 @@ public class ExpressionParser extends StatementParser
                     errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
                 }
 
-                rootNode.setTypeSpec(Predefined.boolType);
+                rootNode.setTypeSpec(Predefined.booleanType);
                 break;
             }
 
