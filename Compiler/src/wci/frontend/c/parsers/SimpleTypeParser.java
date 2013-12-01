@@ -7,7 +7,6 @@ import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 import wci.intermediate.typeimpl.*;
-
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -61,7 +60,7 @@ class SimpleTypeParser extends TypeSpecificationParser
             case IDENTIFIER: {
                 String name = token.getText().toLowerCase();
                 SymTabEntry id = symTabStack.lookup(name);
-
+                
                 if (id != null) {
                     Definition definition = id.getDefinition();
 
@@ -80,23 +79,12 @@ class SimpleTypeParser extends TypeSpecificationParser
                         token = nextToken();  // consume the identifier
                         return null;
                     }
-                    else {
-                        SubrangeTypeParser subrangeTypeParser =
-                            new SubrangeTypeParser(this);
-                        return subrangeTypeParser.parse(token);
-                    }
                 }
                 else {
                     errorHandler.flag(token, IDENTIFIER_UNDEFINED, this);
                     token = nextToken();  // consume the identifier
                     return null;
                 }
-            }
-
-            case LEFT_PAREN: {
-                EnumerationTypeParser enumerationTypeParser =
-                    new EnumerationTypeParser(this);
-                return enumerationTypeParser.parse(token);
             }
 
             case COMMA:
@@ -106,9 +94,7 @@ class SimpleTypeParser extends TypeSpecificationParser
             }
 
             default: {
-                SubrangeTypeParser subrangeTypeParser =
-                    new SubrangeTypeParser(this);
-                return subrangeTypeParser.parse(token);
+                return null;
             }
         }
     }

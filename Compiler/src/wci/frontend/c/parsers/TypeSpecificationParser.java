@@ -7,7 +7,6 @@ import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
-
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -37,8 +36,6 @@ class TypeSpecificationParser extends CParserTD
     static final EnumSet<CTokenType> TYPE_START_SET =
         SimpleTypeParser.SIMPLE_TYPE_START_SET.clone();
     static {
-        TYPE_START_SET.add(CTokenType.ARRAY);
-        TYPE_START_SET.add(CTokenType.RECORD);
         TYPE_START_SET.add(SEMICOLON);
     }
 
@@ -55,17 +52,6 @@ class TypeSpecificationParser extends CParserTD
         token = synchronize(TYPE_START_SET);
 
         switch ((CTokenType) token.getType()) {
-
-            case ARRAY: {
-                ArrayTypeParser arrayTypeParser = new ArrayTypeParser(this);
-                return arrayTypeParser.parse(token);
-            }
-
-            case RECORD: {
-                RecordTypeParser recordTypeParser = new RecordTypeParser(this);
-                return recordTypeParser.parse(token);
-            }
-
             default: {
                 SimpleTypeParser simpleTypeParser = new SimpleTypeParser(this);
                 return simpleTypeParser.parse(token);

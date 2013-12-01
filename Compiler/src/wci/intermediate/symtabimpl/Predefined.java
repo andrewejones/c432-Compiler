@@ -21,8 +21,8 @@ import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 public class Predefined
 {
     // Predefined types.
-    public static TypeSpec integerType;
-    public static TypeSpec realType;
+    public static TypeSpec intType;
+    public static TypeSpec floatType;
     public static TypeSpec booleanType;
     public static TypeSpec charType;
     public static TypeSpec undefinedType;
@@ -52,18 +52,18 @@ public class Predefined
     private static void initializeTypes(SymTabStack symTabStack)
     {
         // Type integer.
-        integerId = symTabStack.enterLocal("integer");
-        integerType = TypeFactory.createType(SCALAR);
-        integerType.setIdentifier(integerId);
+        integerId = symTabStack.enterLocal("int");
+        intType = TypeFactory.createType(SCALAR);
+        intType.setIdentifier(integerId);
         integerId.setDefinition(DefinitionImpl.TYPE);
-        integerId.setTypeSpec(integerType);
+        integerId.setTypeSpec(intType);
 
         // Type real.
-        realId = symTabStack.enterLocal("real");
-        realType = TypeFactory.createType(SCALAR);
-        realType.setIdentifier(realId);
+        realId = symTabStack.enterLocal("float");
+        floatType = TypeFactory.createType(SCALAR);
+        floatType.setIdentifier(realId);
         realId.setDefinition(DefinitionImpl.TYPE);
-        realId.setTypeSpec(realType);
+        realId.setTypeSpec(floatType);
 
         // Type boolean.
         booleanId = symTabStack.enterLocal("boolean");

@@ -16,7 +16,7 @@ import wci.frontend.TokenType;
 public enum CTokenType implements TokenType
 {
     // Reserved words.
-    CONST, ELSE, IF, WHILE,
+    ELSE, IF, WHILE,
 
     // Special symbols.
     PLUS("+"), MINUS("-"), STAR("*"), SLASH("/"), MOD("%"),
@@ -28,7 +28,7 @@ public enum CTokenType implements TokenType
     CHAR, IDENTIFIER, INT, FLOAT,
     ERROR, END_OF_FILE;
 
-    private static final int FIRST_RESERVED_INDEX = CONST.ordinal();
+    private static final int FIRST_RESERVED_INDEX = ELSE.ordinal();
     private static final int LAST_RESERVED_INDEX  = WHILE.ordinal();
 
     private static final int FIRST_SPECIAL_INDEX = PLUS.ordinal();

@@ -1,20 +1,16 @@
 package wci.frontend.c.parsers;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
-import wci.intermediate.typeimpl.*;
 
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
-import static wci.intermediate.typeimpl.TypeFormImpl.*;
-import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 
 /**
  * <h1>ConstantDefinitionsParser</h1>
@@ -37,30 +33,19 @@ public class ConstantDefinitionsParser extends DeclarationsParser
 
     // Synchronization set for a constant identifier.
     private static final EnumSet<CTokenType> IDENTIFIER_SET =
-        DeclarationsParser.TYPE_START_SET.clone();
-    static {
-        IDENTIFIER_SET.add(IDENTIFIER);
-    }
+        EnumSet.of(IDENTIFIER, LEFT_BRACE);
 
     // Synchronization set for starting a constant.
     static final EnumSet<CTokenType> CONSTANT_START_SET =
-        EnumSet.of(IDENTIFIER, INTEGER, REAL, PLUS, MINUS, STRING, SEMICOLON);
+        EnumSet.of(IDENTIFIER, INT, FLOAT, PLUS, MINUS, CHAR, SEMICOLON);
 
     // Synchronization set for the = token.
     private static final EnumSet<CTokenType> EQUALS_SET =
-        CONSTANT_START_SET.clone();
-    static {
-        EQUALS_SET.add(EQUALS);
-        EQUALS_SET.add(SEMICOLON);
-    }
+        EnumSet.of(SINGLE_EQUALS, SEMICOLON, IDENTIFIER, LEFT_BRACE);
 
     // Synchronization set for the start of the next definition or declaration.
     private static final EnumSet<CTokenType> NEXT_START_SET =
-        DeclarationsParser.TYPE_START_SET.clone();
-    static {
-        NEXT_START_SET.add(SEMICOLON);
-        NEXT_START_SET.add(IDENTIFIER);
-    }
+        EnumSet.of(SEMICOLON, IDENTIFIER, LEFT_BRACE);
 
     /**
      * Parse constant definitions.
@@ -93,11 +78,11 @@ public class ConstantDefinitionsParser extends DeclarationsParser
 
             // Synchronize on the = token.
             token = synchronize(EQUALS_SET);
-            if (token.getType() == EQUALS) {
+            if (token.getType() == SINGLE_EQUALS) {
                 token = nextToken();  // consume the =
             }
             else {
-                errorHandler.flag(token, MISSING_EQUALS, this);
+                errorHandler.flag(token, MISSING_SINGLE_EQUALS, this);
             }
 
             // Parse the constant value.
@@ -165,25 +150,25 @@ public class ConstantDefinitionsParser extends DeclarationsParser
                 return parseIdentifierConstant(token, sign);
             }
 
-            case INTEGER: {
+            case INT: {
                 Integer value = (Integer) token.getValue();
                 nextToken();  // consume the number
                 return sign == MINUS ? -value : value;
             }
 
-            case REAL: {
+            case FLOAT: {
                 Float value = (Float) token.getValue();
                 nextToken();  // consume the number
                 return sign == MINUS ? -value : value;
             }
 
-            case STRING: {
+            case CHAR: {
                 if (sign != null) {
                     errorHandler.flag(token, INVALID_CONSTANT, this);
                 }
 
                 nextToken();  // consume the string
-                return (String) token.getValue();
+                return token.getValue();
             }
 
             default: {
@@ -268,18 +253,13 @@ public class ConstantDefinitionsParser extends DeclarationsParser
         TypeSpec constantType = null;
 
         if (value instanceof Integer) {
-            constantType = Predefined.integerType;
+            constantType = Predefined.intType;
         }
         else if (value instanceof Float) {
-            constantType = Predefined.realType;
+            constantType = Predefined.floatType;
         }
-        else if (value instanceof String) {
-            if (((String) value).length() == 1) {
-                constantType = Predefined.charType;
-            }
-            else {
-                constantType = TypeFactory.createStringType((String) value);
-            }
+        else if (value instanceof Character) {
+            constantType = Predefined.charType;
         }
 
         return constantType;

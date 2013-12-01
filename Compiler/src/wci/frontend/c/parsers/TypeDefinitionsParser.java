@@ -36,16 +36,13 @@ public class TypeDefinitionsParser extends DeclarationsParser
 
     // Synchronization set for a type identifier.
     private static final EnumSet<CTokenType> IDENTIFIER_SET =
-        DeclarationsParser.VAR_START_SET.clone();
-    static {
-        IDENTIFIER_SET.add(IDENTIFIER);
-    }
+        EnumSet.of(IDENTIFIER, LEFT_BRACE);
 
     // Synchronization set for the = token.
     private static final EnumSet<CTokenType> EQUALS_SET =
         ConstantDefinitionsParser.CONSTANT_START_SET.clone();
     static {
-        EQUALS_SET.add(EQUALS);
+        EQUALS_SET.add(SINGLE_EQUALS);
         EQUALS_SET.add(SEMICOLON);
     }
 
@@ -55,11 +52,7 @@ public class TypeDefinitionsParser extends DeclarationsParser
 
     // Synchronization set for the start of the next definition or declaration.
     private static final EnumSet<CTokenType> NEXT_START_SET =
-        DeclarationsParser.VAR_START_SET.clone();
-    static {
-        NEXT_START_SET.add(SEMICOLON);
-        NEXT_START_SET.add(IDENTIFIER);
-    }
+        EnumSet.of(SEMICOLON, IDENTIFIER, LEFT_BRACE);
 
     /**
      * Parse type definitions.
@@ -92,11 +85,11 @@ public class TypeDefinitionsParser extends DeclarationsParser
 
             // Synchronize on the = token.
             token = synchronize(EQUALS_SET);
-            if (token.getType() == EQUALS) {
+            if (token.getType() == SINGLE_EQUALS) {
                 token = nextToken();  // consume the =
             }
             else {
-                errorHandler.flag(token, MISSING_EQUALS, this);
+                errorHandler.flag(token, MISSING_SINGLE_EQUALS, this);
             }
 
             // Parse the type specification.
@@ -104,7 +97,7 @@ public class TypeDefinitionsParser extends DeclarationsParser
                 new TypeSpecificationParser(this);
             TypeSpec type = typeSpecificationParser.parse(token);
 
-            // Set identifier to be a type and set its type specificationt.
+            // Set identifier to be a type and set its type specification.
             if (typeId != null) {
                 typeId.setDefinition(TYPE);
             }

@@ -18,6 +18,7 @@ public enum CErrorCode
     INVALID_NUMBER("Invalid number"),
     INVALID_SUBRANGE_TYPE("Invalid subrange type"),
     INVALID_TYPE("Invalid type"),
+    MIN_GT_MAX("Min greater than max"),
     MISSING_COMMA("Missing comma"),
     MISSING_IDENTIFIER("Missing identifier"),
     MISSING_LEFT_BRACE("Missing {"),

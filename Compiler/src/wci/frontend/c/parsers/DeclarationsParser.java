@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
-
+import wci.intermediate.symtabimpl.Predefined;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -30,26 +30,11 @@ public class DeclarationsParser extends CParserTD
         super(parent);
     }
 
-    static final EnumSet<CTokenType> DECLARATION_START_SET =
-        EnumSet.of(CONST, TYPE, VAR, PROCEDURE, FUNCTION, BEGIN);
-
-    static final EnumSet<CTokenType> TYPE_START_SET =
-        DECLARATION_START_SET.clone();
-    static {
-        TYPE_START_SET.remove(CONST);
-    }
-
-    static final EnumSet<CTokenType> VAR_START_SET =
-        TYPE_START_SET.clone();
-    static {
-        VAR_START_SET.remove(TYPE);
-    }
-
+    static final EnumSet<CTokenType> VAR_SET =
+        EnumSet.of(SEMICOLON, LEFT_BRACE);
+    
     static final EnumSet<CTokenType> ROUTINE_START_SET =
-        VAR_START_SET.clone();
-    static {
-        ROUTINE_START_SET.remove(VAR);
-    }
+            EnumSet.of(LEFT_BRACE);
 
     /**
      * Parse declarations.
@@ -60,37 +45,18 @@ public class DeclarationsParser extends CParserTD
     public void parse(Token token)
         throws Exception
     {
-        token = synchronize(DECLARATION_START_SET);
-
-        if (token.getType() == CONST) {
-            token = nextToken();  // consume CONST
-
-            ConstantDefinitionsParser constantDefinitionsParser =
-                new ConstantDefinitionsParser(this);
-            constantDefinitionsParser.parse(token);
-        }
-
-        token = synchronize(TYPE_START_SET);
-
-        if (token.getType() == TYPE) {
-            token = nextToken();  // consume TYPE
-
-            TypeDefinitionsParser typeDefinitionsParser =
-                new TypeDefinitionsParser(this);
-            typeDefinitionsParser.parse(token);
-        }
-
-        token = synchronize(VAR_START_SET);
-
-        if (token.getType() == VAR) {
-            token = nextToken();  // consume VAR
-
-            VariableDeclarationsParser variableDeclarationsParser =
-                new VariableDeclarationsParser(this);
-            variableDeclarationsParser.setDefinition(VARIABLE);
-            variableDeclarationsParser.parse(token);
-        }
-
+        // will need to check if it's a variable or a function (LATER)
+    	// For now: single variable
+    	
+    	// Current token should be INT/FLOAT/CHAR
+    	// Need to check and see which it is...? Or let VariableDec handle it?
+        //token = nextToken();
+        VariableDeclarationsParser variableDeclarationsParser =
+            new VariableDeclarationsParser(this);
+        variableDeclarationsParser.setDefinition(VARIABLE);
+        variableDeclarationsParser.parse(token);
+	        
+	        
         token = synchronize(ROUTINE_START_SET);
     }
 }
