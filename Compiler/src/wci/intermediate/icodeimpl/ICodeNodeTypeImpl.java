@@ -30,7 +30,7 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
 
     // Operands
     VARIABLE, SUBSCRIPTS, FIELD,
-    CHAR_CONSTANT, INTEGER_CONSTANT, REAL_CONSTANT,
+    INTEGER_CONSTANT, REAL_CONSTANT,
     STRING_CONSTANT, BOOLEAN_CONSTANT,
 
     // WRITE parameter
