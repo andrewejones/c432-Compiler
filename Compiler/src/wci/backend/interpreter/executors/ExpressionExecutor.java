@@ -61,10 +61,10 @@ public class ExpressionExecutor extends StatementExecutor
                 return (Float) node.getAttribute(VALUE);
             }
 
-            case STRING_CONSTANT: {
+            case CHAR_CONSTANT: {
 
                 // Return the string value.
-                return (String) node.getAttribute(VALUE);
+                return (Character) node.getAttribute(VALUE);
             }
 
             case NEGATE: {

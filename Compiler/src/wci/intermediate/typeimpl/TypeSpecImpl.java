@@ -12,7 +12,7 @@ import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 /**
  * <h1>TypeSpecImpl</h1>
  *
- * <p>A C type specification implementation.</p>
+ * <p>A Pascal type specification implementation.</p>
  *
  * <p>Copyright (c) 2009 by Ronald Mak</p>
  * <p>For instructional purposes only.  No warranties.</p>
@@ -100,9 +100,9 @@ public class TypeSpecImpl
     }
 
     /**
-     * @return true if this is a C string type.
+     * @return true if this is a Pascal string type.
      */
-    public boolean isCString()
+    public boolean isPascalString()
     {
         if (form == ARRAY) {
             TypeSpec elmtType  = (TypeSpec) getAttribute(ARRAY_ELEMENT_TYPE);

@@ -6,11 +6,11 @@ import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
+import wci.intermediate.symtabimpl.*;
+import wci.intermediate.typeimpl.*;
 
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
-import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
-import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 /**
  * <h1>IfStatementParser</h1>
@@ -79,7 +79,15 @@ public class IfStatementParser extends StatementParser
         // Parse the statement.
         // The IF node adopts the statement subtree as its second child.
         StatementParser statementParser = new StatementParser(this);
-        ifNode.addChild(statementParser.parse(token));
+        ICodeNode exprNode = expressionParser.parse(token);
+        ifNode.addChild(exprNode);
+
+        // Type check: The expression type must be boolean.
+        TypeSpec exprType = exprNode != null ? exprNode.getTypeSpec()
+                                             : Predefined.undefinedType;
+        if (!TypeChecker.isBoolean(exprType)) {
+            errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
+        }
         token = currentToken();
 
         // Look for an ELSE.

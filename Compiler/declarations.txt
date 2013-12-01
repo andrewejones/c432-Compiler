@@ -2,5 +2,5 @@ int i, j;
 char c;
 
 {
-	
+	j = i;
 }
