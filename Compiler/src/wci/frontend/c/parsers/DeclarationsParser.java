@@ -31,8 +31,8 @@ public class DeclarationsParser extends CParserTD
     }
 
     static final EnumSet<CTokenType> VAR_SET =
-        EnumSet.of(SEMICOLON, LEFT_BRACE);
-    
+            EnumSet.of(LEFT_BRACE, IDENTIFIER);
+
     static final EnumSet<CTokenType> ROUTINE_START_SET =
             EnumSet.of(LEFT_BRACE);
 
@@ -45,18 +45,19 @@ public class DeclarationsParser extends CParserTD
     public void parse(Token token)
         throws Exception
     {
-        // will need to check if it's a variable or a function (LATER)
-    	// For now: single variable
+        // will need to check if it's a variable or a function (LATER)...
     	
     	// Current token should be INT/FLOAT/CHAR
-    	// Need to check and see which it is...? Or let VariableDec handle it?
-        //token = nextToken();
         VariableDeclarationsParser variableDeclarationsParser =
             new VariableDeclarationsParser(this);
         variableDeclarationsParser.setDefinition(VARIABLE);
-        variableDeclarationsParser.parse(token);
-	        
-	        
+        
+        // Parse all variable declarations
+        while (token.getType() != LEFT_BRACE) {
+        	variableDeclarationsParser.parse(token);
+            token = synchronize(VAR_SET);
+        }
+        
         token = synchronize(ROUTINE_START_SET);
     }
 }
