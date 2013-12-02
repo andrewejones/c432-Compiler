@@ -100,9 +100,9 @@ public class TypeSpecImpl
     }
 
     /**
-     * @return true if this is a Pascal string type.
+     * @return true if this is a C string type.
      */
-    public boolean isPascalString()
+    public boolean isCString()
     {
         if (form == ARRAY) {
             TypeSpec elmtType  = (TypeSpec) getAttribute(ARRAY_ELEMENT_TYPE);

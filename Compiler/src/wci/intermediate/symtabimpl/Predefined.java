@@ -36,8 +36,6 @@ public class Predefined
     public static SymTabEntry charId;
     public static SymTabEntry falseId;
     public static SymTabEntry trueId;
-    public static SymTabEntry readId;
-    public static SymTabEntry readlnId;
     public static SymTabEntry writeId;
     public static SymTabEntry writelnId;
 
@@ -121,8 +119,6 @@ public class Predefined
      */
     private static void initializeStandardRoutines(SymTabStack symTabStack)
     {
-        readId    = enterStandard(symTabStack, PROCEDURE, "read",    READ);
-        readlnId  = enterStandard(symTabStack, PROCEDURE, "readln",  READLN);
         writeId   = enterStandard(symTabStack, PROCEDURE, "write",   WRITE);
         writelnId = enterStandard(symTabStack, PROCEDURE, "writeln", WRITELN);
     }

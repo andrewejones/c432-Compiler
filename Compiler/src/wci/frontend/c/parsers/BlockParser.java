@@ -3,6 +3,7 @@ package wci.frontend.c.parsers;
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
+
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -42,7 +43,7 @@ public class BlockParser extends CParserTD
         StatementParser statementParser = new StatementParser(this);
 
         // Parse any declarations.
-        declarationsParser.parse(token);
+        declarationsParser.parse(token, routineId);
 
         token = synchronize(StatementParser.STMT_START_SET);
         TokenType tokenType = token.getType();

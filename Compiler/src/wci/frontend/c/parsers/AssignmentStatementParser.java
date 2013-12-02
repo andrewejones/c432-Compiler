@@ -22,6 +22,10 @@ import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
  */
 public class AssignmentStatementParser extends StatementParser
 {
+    // Set to true to parse a function name
+    // as the target of an assignment.
+    private boolean isFunctionTarget = false;
+
     /**
      * Constructor.
      * @param parent the parent parser.
@@ -53,17 +57,19 @@ public class AssignmentStatementParser extends StatementParser
 
         // Parse the target variable.
         VariableParser variableParser = new VariableParser(this);
-        ICodeNode targetNode = variableParser.parse(token);
+        ICodeNode targetNode = isFunctionTarget
+                               ? variableParser.parseFunctionNameTarget(token)
+                               : variableParser.parse(token);
         TypeSpec targetType = targetNode != null ? targetNode.getTypeSpec()
                                                  : Predefined.undefinedType;
 
         // The ASSIGN node adopts the variable node as its first child.
         assignNode.addChild(targetNode);
 
-        // Synchronize on the := token.
+        // Synchronize on the = token.
         token = synchronize(SINGLE_EQUALS_SET);
         if (token.getType() == SINGLE_EQUALS) {
-            token = nextToken();  // consume the :=
+            token = nextToken();  // consume the =
         }
         else {
             errorHandler.flag(token, MISSING_SINGLE_EQUALS, this);
@@ -84,5 +90,18 @@ public class AssignmentStatementParser extends StatementParser
 
         assignNode.setTypeSpec(targetType);
         return assignNode;
+    }
+
+    /**
+     * Parse an assignment to a function name.
+     * @param token Token
+     * @return ICodeNode
+     * @throws Exception
+     */
+    public ICodeNode parseFunctionNameAssignment(Token token)
+        throws Exception
+    {
+        isFunctionTarget = true;
+        return parse(token);
     }
 }

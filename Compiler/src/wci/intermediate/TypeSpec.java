@@ -43,9 +43,9 @@ public interface TypeSpec
     public Object getAttribute(TypeKey key);
 
     /**
-     * @return true if this is a Pascal string type.
+     * @return true if this is a C string type.
      */
-    public boolean isPascalString();
+    public boolean isCString();
 
     /**
      * @return the base type of this type.

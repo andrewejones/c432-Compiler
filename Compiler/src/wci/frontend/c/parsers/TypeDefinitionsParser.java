@@ -36,7 +36,10 @@ public class TypeDefinitionsParser extends DeclarationsParser
 
     // Synchronization set for a type identifier.
     private static final EnumSet<CTokenType> IDENTIFIER_SET =
-        EnumSet.of(IDENTIFIER, LEFT_BRACE);
+        DeclarationsParser.VAR_START_SET.clone();
+    static {
+        IDENTIFIER_SET.add(IDENTIFIER);
+    }
 
     // Synchronization set for the = token.
     private static final EnumSet<CTokenType> EQUALS_SET =
@@ -52,14 +55,20 @@ public class TypeDefinitionsParser extends DeclarationsParser
 
     // Synchronization set for the start of the next definition or declaration.
     private static final EnumSet<CTokenType> NEXT_START_SET =
-        EnumSet.of(SEMICOLON, IDENTIFIER, LEFT_BRACE);
+        DeclarationsParser.VAR_START_SET.clone();
+    static {
+        NEXT_START_SET.add(SEMICOLON);
+        NEXT_START_SET.add(IDENTIFIER);
+    }
 
     /**
      * Parse type definitions.
      * @param token the initial token.
+     * @param parentId the symbol table entry of the parent routine's name.
+     * @return null
      * @throws Exception if an error occurred.
      */
-    public void parse(Token token)
+    public SymTabEntry parse(Token token, SymTabEntry parentId)
         throws Exception
     {
         token = synchronize(IDENTIFIER_SET);
@@ -131,5 +140,7 @@ public class TypeDefinitionsParser extends DeclarationsParser
 
             token = synchronize(IDENTIFIER_SET);
         }
+
+        return null;
     }
 }

@@ -55,14 +55,14 @@ public class ExpressionParser extends StatementParser
 
     // Set of relational operators.
     private static final EnumSet<CTokenType> REL_OPS =
-        EnumSet.of(SINGLE_EQUALS, NOT_EQUALS, LESS_THAN, LESS_EQUALS,
+        EnumSet.of(DOUBLE_EQUALS, NOT_EQUALS, LESS_THAN, LESS_EQUALS,
                    GREATER_THAN, GREATER_EQUALS);
 
     // Map relational operator tokens to node types.
     private static final HashMap<CTokenType, ICodeNodeType>
         REL_OPS_MAP = new HashMap<CTokenType, ICodeNodeType>();
     static {
-        REL_OPS_MAP.put(SINGLE_EQUALS, EQ);
+        REL_OPS_MAP.put(DOUBLE_EQUALS, EQ);
         REL_OPS_MAP.put(NOT_EQUALS, NE);
         REL_OPS_MAP.put(LESS_THAN, LT);
         REL_OPS_MAP.put(LESS_EQUALS, LE);
@@ -422,7 +422,7 @@ public class ExpressionParser extends StatementParser
                 // Create a CHAR_CONSTANT node as the root node.
                 rootNode = ICodeFactory.createICodeNode(CHAR_CONSTANT);
                 rootNode.setAttribute(VALUE, token.getValue());
-                
+
                 token = nextToken();  // consume the char
 
                 rootNode.setTypeSpec(Predefined.charType);
@@ -521,7 +521,7 @@ public class ExpressionParser extends StatementParser
                     rootNode = ICodeFactory.createICodeNode(REAL_CONSTANT);
                     rootNode.setAttribute(VALUE, value);
                 }
-                else if (value instanceof String) {
+                else if (value instanceof Character) {
                     rootNode = ICodeFactory.createICodeNode(CHAR_CONSTANT);
                     rootNode.setAttribute(VALUE, value);
                 }
@@ -547,6 +547,12 @@ public class ExpressionParser extends StatementParser
                 token = nextToken();  // consume the enum constant identifier
 
                 rootNode.setTypeSpec(type);
+                break;
+            }
+
+            case FUNCTION: {
+                CallParser callParser = new CallParser(this);
+                rootNode = callParser.parse(token);
                 break;
             }
 

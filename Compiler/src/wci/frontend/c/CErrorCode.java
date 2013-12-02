@@ -10,6 +10,7 @@ package wci.frontend.c;
  */
 public enum CErrorCode
 {
+	ALREADY_FORWARDED("Already forwarded"),
     IDENTIFIER_REDEFINED("Identifier redefined"),
     IDENTIFIER_UNDEFINED("Identifier undefined"),
     INCOMPATIBLE_TYPES("Incompatible types"),
@@ -39,6 +40,7 @@ public enum CErrorCode
     UNEXPECTED_EOL("Unexpected end of line"),
     UNEXPECTED_EOF("Unexpected end of file"),
     UNEXPECTED_TOKEN("Unexpected token"),
+    WRONG_NUMBER_OF_PARMS("Wrong number of parameters"),
 
     // Fatal errors.
     IO_ERROR(-101, "Object I/O error"),

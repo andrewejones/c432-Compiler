@@ -12,10 +12,10 @@ import wci.intermediate.typeimpl.*;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.symtabimpl.DefinitionImpl.FUNCTION;
 import static wci.intermediate.symtabimpl.DefinitionImpl.UNDEFINED;
 import static wci.intermediate.symtabimpl.DefinitionImpl.VARIABLE;
 import static wci.intermediate.symtabimpl.DefinitionImpl.VALUE_PARM;
-import static wci.intermediate.symtabimpl.DefinitionImpl.VAR_PARM;
 import static wci.intermediate.typeimpl.TypeFormImpl.ARRAY;
 import static wci.intermediate.typeimpl.TypeFormImpl.RECORD;
 import static wci.intermediate.typeimpl.TypeKeyImpl.*;
@@ -32,6 +32,10 @@ import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
  */
 public class VariableParser extends StatementParser
 {
+    // Set to true to parse a function name
+    // as the target of an assignment.
+    private boolean isFunctionTarget = false;
+
     /**
      * Constructor.
      * @param parent the parent parser.
@@ -41,9 +45,8 @@ public class VariableParser extends StatementParser
         super(parent);
     }
 
-    // Synchronization set to start a subscript or a field.
     private static final EnumSet<CTokenType> SUBSCRIPT_FIELD_START_SET =
-        EnumSet.of(LEFT_BRACKET, DOT);
+        EnumSet.of(LEFT_BRACKET);
 
     /**
      * Parse a variable.
@@ -71,6 +74,19 @@ public class VariableParser extends StatementParser
     }
 
     /**
+     * Parse a function name as the target of an assignment statement.
+     * @param token the initial token.
+     * @return the root node of the generated parse tree.
+     * @throws Exception if an error occurred.
+     */
+    public ICodeNode parseFunctionNameTarget(Token token)
+        throws Exception
+    {
+        isFunctionTarget = true;
+        return parse(token);
+    }
+
+    /**
      * Parse a variable.
      * @param token the initial token.
      * @param variableId the symbol table entry of the variable identifier.
@@ -82,8 +98,10 @@ public class VariableParser extends StatementParser
     {
         // Check how the variable is defined.
         Definition defnCode = variableId.getDefinition();
-        if ((defnCode != VARIABLE) && (defnCode != VALUE_PARM) &&
-            (defnCode != VAR_PARM))
+        if (! ( (defnCode == VARIABLE) || (defnCode == VALUE_PARM) ||
+                (isFunctionTarget && (defnCode == FUNCTION) )
+              )
+           )
         {
             errorHandler.flag(token, INVALID_IDENTIFIER_USAGE, this);
         }
@@ -95,19 +113,22 @@ public class VariableParser extends StatementParser
         variableNode.setAttribute(ID, variableId);
 
         token = nextToken();  // consume the identifier
-
-        // Parse array subscripts or record fields.
         TypeSpec variableType = variableId.getTypeSpec();
-        while (SUBSCRIPT_FIELD_START_SET.contains(token.getType())) {
-            ICodeNode subFldNode = token.getType() == LEFT_BRACKET
-                                          ? parseSubscripts(variableType)
-                                          : parseField(variableType);
-            token = currentToken();
 
-            // Update the variable's type.
-            // The variable node adopts the SUBSCRIPTS or FIELD node.
-            variableType = subFldNode.getTypeSpec();
-            variableNode.addChild(subFldNode);
+        if (!isFunctionTarget) {
+
+            // Parse array subscripts or record fields.
+            while (SUBSCRIPT_FIELD_START_SET.contains(token.getType())) {
+                ICodeNode subFldNode = token.getType() == LEFT_BRACKET
+                                       ? parseSubscripts(variableType)
+                                       : parseField(variableType);
+                token = currentToken();
+
+                // Update the variable's type.
+                // The variable node adopts the SUBSCRIPTS or FIELD node.
+                variableType = subFldNode.getTypeSpec();
+                variableNode.addChild(subFldNode);
+            }
         }
 
         variableNode.setTypeSpec(variableType);

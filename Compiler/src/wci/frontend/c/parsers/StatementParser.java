@@ -5,8 +5,11 @@ import java.util.EnumSet;
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
+import wci.intermediate.symtabimpl.*;
+
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
+import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
@@ -59,11 +62,44 @@ public class StatementParser extends CParserTD
                 break;
             }
 
-            // An assignment statement begins with a variable's identifier.
             case IDENTIFIER: {
-                AssignmentStatementParser assignmentParser =
-                    new AssignmentStatementParser(this);
-                statementNode = assignmentParser.parse(token);
+                String name = token.getText().toLowerCase();
+                SymTabEntry id = symTabStack.lookup(name);
+                Definition idDefn = id != null ? id.getDefinition()
+                                               : UNDEFINED;
+
+                // Assignment statement or procedure call.
+                switch ((DefinitionImpl) idDefn) {
+
+                    case VARIABLE:
+                    case VALUE_PARM:
+                    case UNDEFINED: {
+                        AssignmentStatementParser assignmentParser =
+                            new AssignmentStatementParser(this);
+                        statementNode = assignmentParser.parse(token);
+                        break;
+                    }
+
+                    case FUNCTION: {
+                        AssignmentStatementParser assignmentParser =
+                            new AssignmentStatementParser(this);
+                        statementNode =
+                            assignmentParser.parseFunctionNameAssignment(token);
+                        break;
+                    }
+
+                    case PROCEDURE: {
+                        CallParser callParser = new CallParser(this);
+                        statementNode = callParser.parse(token);
+                        break;
+                    }
+
+                    default: {
+                        errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+                        token = nextToken();  // consume identifier
+                    }
+                }
+
                 break;
             }
 
@@ -106,7 +142,7 @@ public class StatementParser extends CParserTD
 
     /**
      * Parse a statement list.
-     * @param token the current token.
+     * @param token the curent token.
      * @param parentNode the parent node of the statement list.
      * @param terminator the token type of the node that terminates the list.
      * @param errorCode the error code if the terminator token is missing.

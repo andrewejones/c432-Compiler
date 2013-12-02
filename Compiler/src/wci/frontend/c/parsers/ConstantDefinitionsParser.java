@@ -1,16 +1,20 @@
 package wci.frontend.c.parsers;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
+import wci.intermediate.typeimpl.*;
 
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+import static wci.intermediate.typeimpl.TypeFormImpl.*;
+import static wci.intermediate.typeimpl.TypeKeyImpl.*;
 
 /**
  * <h1>ConstantDefinitionsParser</h1>
@@ -33,7 +37,10 @@ public class ConstantDefinitionsParser extends DeclarationsParser
 
     // Synchronization set for a constant identifier.
     private static final EnumSet<CTokenType> IDENTIFIER_SET =
-        EnumSet.of(IDENTIFIER, LEFT_BRACE);
+        DeclarationsParser.TYPE_START_SET.clone();
+    static {
+        IDENTIFIER_SET.add(IDENTIFIER);
+    }
 
     // Synchronization set for starting a constant.
     static final EnumSet<CTokenType> CONSTANT_START_SET =
@@ -41,18 +48,28 @@ public class ConstantDefinitionsParser extends DeclarationsParser
 
     // Synchronization set for the = token.
     private static final EnumSet<CTokenType> EQUALS_SET =
-        EnumSet.of(SINGLE_EQUALS, SEMICOLON, IDENTIFIER, LEFT_BRACE);
+        CONSTANT_START_SET.clone();
+    static {
+        EQUALS_SET.add(SINGLE_EQUALS);
+        EQUALS_SET.add(SEMICOLON);
+    }
 
     // Synchronization set for the start of the next definition or declaration.
     private static final EnumSet<CTokenType> NEXT_START_SET =
-        EnumSet.of(SEMICOLON, IDENTIFIER, LEFT_BRACE);
+        DeclarationsParser.TYPE_START_SET.clone();
+    static {
+        NEXT_START_SET.add(SEMICOLON);
+        NEXT_START_SET.add(IDENTIFIER);
+    }
 
     /**
      * Parse constant definitions.
      * @param token the initial token.
+     * @param parentId the symbol table entry of the parent routine's name.
+     * @return null
      * @throws Exception if an error occurred.
      */
-    public void parse(Token token)
+    public SymTabEntry parse(Token token, SymTabEntry parentId)
         throws Exception
     {
         token = synchronize(IDENTIFIER_SET);
@@ -120,6 +137,8 @@ public class ConstantDefinitionsParser extends DeclarationsParser
 
             token = synchronize(IDENTIFIER_SET);
         }
+
+        return null;
     }
 
     /**
@@ -167,7 +186,7 @@ public class ConstantDefinitionsParser extends DeclarationsParser
                     errorHandler.flag(token, INVALID_CONSTANT, this);
                 }
 
-                nextToken();  // consume the string
+                nextToken();  // consume the char
                 return token.getValue();
             }
 
@@ -258,8 +277,13 @@ public class ConstantDefinitionsParser extends DeclarationsParser
         else if (value instanceof Float) {
             constantType = Predefined.realType;
         }
-        else if (value instanceof Character) {
-            constantType = Predefined.charType;
+        else if (value instanceof String) {
+            if (((String) value).length() == 1) {
+                constantType = Predefined.charType;
+            }
+            else {
+                constantType = TypeFactory.createStringType((String) value);
+            }
         }
 
         return constantType;

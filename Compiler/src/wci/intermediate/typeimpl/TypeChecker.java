@@ -125,15 +125,15 @@ public class TypeChecker
             compatible = true;
         }
 
-        // real := integer
+        // real = integer
         else if (isReal(targetType) && isInteger(valueType)) {
             compatible = true;
         }
 
-        // string := string
+        // string = string
         else {
             compatible =
-                targetType.isPascalString() && valueType.isPascalString();
+                targetType.isCString() && valueType.isCString();
         }
 
         return compatible;
@@ -170,7 +170,7 @@ public class TypeChecker
 
         // Two strings.
         else {
-            compatible = type1.isPascalString() && type2.isPascalString();
+            compatible = type1.isCString() && type2.isCString();
         }
 
         return compatible;
