@@ -48,5 +48,6 @@ public class CWordToken extends CToken
         type = (RESERVED_WORDS.contains(text.toLowerCase()))
                ? CTokenType.valueOf(text.toUpperCase())  // reserved word
                : IDENTIFIER;                                  // identifier
+               
     }
 }

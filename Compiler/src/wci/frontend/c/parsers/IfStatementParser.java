@@ -1,104 +1,68 @@
 package wci.frontend.c.parsers;
 
 import java.util.EnumSet;
-
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
 import wci.intermediate.symtabimpl.*;
 import wci.intermediate.typeimpl.*;
-
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 
-/**
- * <h1>IfStatementParser</h1>
- *
- * <p>Parse a C IF statement.</p>
- *
- * <p>Copyright (c) 2009 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
- */
-public class IfStatementParser extends StatementParser
-{
-    /**
-     * Constructor.
-     * @param parent the parent parser.
-     */
-    public IfStatementParser(CParserTD parent)
-    {
-        super(parent);
-    }
+public class IfStatementParser extends StatementParser {
 
-    // Synchronization set for PAREN.
-    private static final EnumSet<CTokenType> PAREN_SET =
-        StatementParser.STMT_START_SET.clone();
-    static {
-        PAREN_SET.add(LEFT_PAREN);
-        PAREN_SET.add(RIGHT_PAREN);
-    }
+	public IfStatementParser(CParserTD parent) {
+		super(parent);
+	}
 
-    /**
-     * Parse an IF statement.
-     * @param token the initial token.
-     * @return the root node of the generated parse tree.
-     * @throws Exception if an error occurred.
-     */
-    public ICodeNode parse(Token token)
-        throws Exception
-    {
-        token = nextToken();  // consume the IF
+	// sync set for {
+	private static final EnumSet<CTokenType> THEN_SET = EnumSet.of(LEFT_BRACE, CTokenType.IF, WHILE, IDENTIFIER, SEMICOLON, CTokenType.RETURN, SEMICOLON, RIGHT_BRACE, ELSE);
 
-        // Create an IF node.
-        ICodeNode ifNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.IF);
+	// sync set for ( expression )
+	private static final EnumSet<CTokenType> PAREN_SET = EnumSet.of(LEFT_PAREN, RIGHT_PAREN);
 
-        // Synchronize at LEFT_PAREN
-        token = synchronize(PAREN_SET);
-        if (token.getType() == LEFT_PAREN) {
-            token = nextToken();  // consume the LEFT PAREN
-        }
-        else {
-            errorHandler.flag(token, MISSING_LEFT_PAREN, this);
-        }
-        
-        // Parse the expression.
-        // The IF node adopts the expression subtree as its first child.
-        ExpressionParser expressionParser = new ExpressionParser(this);
-        ifNode.addChild(expressionParser.parse(token));
+	public ICodeNode parse(Token token) throws Exception {
+		token = nextToken(); // consume if
+		
+		ICodeNode ifNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.IF); // create if node
+		
+		token = synchronize(PAREN_SET); // sync at (
+		if (token.getType() == LEFT_PAREN)
+			token = nextToken(); // consume (
+		else
+			errorHandler.flag(token, MISSING_LEFT_PAREN, this);
 
-        // Synchronize at RIGHT_PAREN
-        token = synchronize(PAREN_SET);
-        if (token.getType() == RIGHT_PAREN) {
-            token = nextToken();  // consume the RIGHT_PAREN
-        }
-        else {
-            errorHandler.flag(token, MISSING_RIGHT_PAREN, this);
-        }
+		// parse expression; if node adopts expression subtree as first child
+		ExpressionParser expressionParser = new ExpressionParser(this);
+		ICodeNode exprNode = expressionParser.parse(token);
+		ifNode.addChild(exprNode);
 
-        // Parse the statement.
-        // The IF node adopts the statement subtree as its second child.
-        StatementParser statementParser = new StatementParser(this);
-        ICodeNode exprNode = expressionParser.parse(token);
-        ifNode.addChild(exprNode);
+		// type check: expression must be boolean
+		TypeSpec exprType = exprNode != null ? exprNode.getTypeSpec() : Predefined.undefinedType;
+		if (!TypeChecker.isBoolean(exprType))
+			errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
 
-        // Type check: The expression type must be boolean.
-        TypeSpec exprType = exprNode != null ? exprNode.getTypeSpec()
-                                             : Predefined.undefinedType;
-        if (!TypeChecker.isBoolean(exprType)) {
-            errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
-        }
-        token = currentToken();
+		token = synchronize(PAREN_SET); // sync at )
+		if (token.getType() == RIGHT_PAREN)
+			token = nextToken(); // consume )
+		else
+			errorHandler.flag(token, MISSING_RIGHT_PAREN, this);
+		
+		token = synchronize(THEN_SET); // sync at statement token
+		
+		// parse then statement; if node adopts statement subtree as second child
+		StatementParser statementParser = new StatementParser(this);
+		ifNode.addChild(statementParser.parse(token));
+		token = currentToken();
 
-        // Look for an ELSE.
-        if (token.getType() == ELSE) {
-            token = nextToken();  // consume the ELSE
+		if (token.getType() == ELSE) { // look for else
+			token = nextToken(); // consume else
+			// parse else statement; if node adopts statement subtree as third child
+			ifNode.addChild(statementParser.parse(token));
+		}
 
-            // Parse the ELSE statement.
-            // The IF node adopts the statement subtree as its third child.
-            ifNode.addChild(statementParser.parse(token));
-        }
-
-        return ifNode;
-    }
+		return ifNode;
+	}
+	
 }

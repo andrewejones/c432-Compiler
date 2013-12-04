@@ -5,7 +5,6 @@ import java.util.EnumSet;
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
-
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -30,18 +29,8 @@ public class DeclarationsParser extends CParserTD
         super(parent);
     }
 
-    static final EnumSet<CTokenType> DECLARATION_START_SET =
-        EnumSet.of(PROCEDURE, FUNCTION, LEFT_BRACE);
-
-    static final EnumSet<CTokenType> TYPE_START_SET =
-        DECLARATION_START_SET.clone();
-
-    static final EnumSet<CTokenType> VAR_START_SET =
-        TYPE_START_SET.clone();
-
-    static final EnumSet<CTokenType> ROUTINE_START_SET =
-        VAR_START_SET.clone();
-
+    static final EnumSet<CTokenType> DECLARATION_START_SET = EnumSet.of(IDENTIFIER);
+    
     /**
      * Parse declarations.
      * To be overridden by the specialized declarations parser subclasses.
@@ -53,24 +42,14 @@ public class DeclarationsParser extends CParserTD
     public SymTabEntry parse(Token token, SymTabEntry parentId)
         throws Exception
     {
-        token = synchronize(DECLARATION_START_SET);
-        
-        token = synchronize(VAR_START_SET);
-
-     // Current token should be INT/FLOAT/CHAR
-        VariableDeclarationsParser variableDeclarationsParser =
-            new VariableDeclarationsParser(this);
+    	token = synchronize(DECLARATION_START_SET);
+    	
+        VarDecParser variableDeclarationsParser = new VarDecParser(this);
         variableDeclarationsParser.setDefinition(VARIABLE);
+        variableDeclarationsParser.parse(token, parentId);
+	    token = currentToken();
         
-        // Parse all variable declarations
-        while (token.getType() != LEFT_BRACE) {
-        	variableDeclarationsParser.parse(token, null);
-            token = synchronize(VAR_START_SET);
-        }
-        
-        
-        
-        
+        /*
         token = synchronize(ROUTINE_START_SET);
         TokenType tokenType = token.getType();
 
@@ -90,6 +69,8 @@ public class DeclarationsParser extends CParserTD
             token = synchronize(ROUTINE_START_SET);
             tokenType = token.getType();
         }
+        */
+        
 
         return null;
     }

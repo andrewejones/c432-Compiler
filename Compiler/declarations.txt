@@ -1,6 +1,3 @@
-int i, j;
-char c;
-
 {
-	j = i;
+	int i;
 }

@@ -1,57 +1,80 @@
 package wci.frontend.c.parsers;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
-
+import wci.intermediate.symtabimpl.DefinitionImpl;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
+import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.COMPOUND;
+import static wci.intermediate.symtabimpl.DefinitionImpl.VARIABLE;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 
-/**
- * <h1>ProgramParser</h1>
- *
- * <p>Parse a C program.</p>
- *
- * <p>Copyright (c) 2009 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
- */
-public class ProgramParser extends DeclarationsParser
-{
-    /**
-     * Constructor.
-     * @param parent the parent parser.
-     */
-    public ProgramParser(CParserTD parent)
-    {
-        super(parent);
-    }
+public class ProgramParser extends DeclarationsParser {
 
-    // Synchronization set to start a program.
-    static final EnumSet<CTokenType> PROGRAM_START_SET =
-        EnumSet.of(PROGRAM, SEMICOLON);
-    static {
-        PROGRAM_START_SET.addAll(DeclarationsParser.DECLARATION_START_SET);
-    }
+	public ProgramParser(CParserTD parent) {
+		super(parent);
+	}
 
-    /**
-     * Parse a program.
-     * @param token the initial token.
-     * @param parentId the symbol table entry of the parent routine's name.
-     * @return null
-     * @throws Exception if an error occurred.
-     */
-    public SymTabEntry parse(Token token, SymTabEntry parentId)
-        throws Exception
-    {
-        token = synchronize(PROGRAM_START_SET);
+	// sync set
+	static final EnumSet<CTokenType> PROGRAM_START_SET = EnumSet.of(SEMICOLON);
 
-        // Parse the program.
-        DeclaredRoutineParser routineParser = new DeclaredRoutineParser(this);
-        routineParser.parse(token, parentId);
+	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
+		
+		// create dummy program named test
+		SymTabEntry routineId = symTabStack.enterLocal("'Team Redundancy Team'");
+		routineId.setDefinition(DefinitionImpl.PROGRAM);
 
-        return null;
-    }
+		// create intermediate code for calling main()
+		ICode iCode = ICodeFactory.createICode();
+		routineId.setAttribute(ROUTINE_ICODE, iCode);
+		routineId.setAttribute(ROUTINE_ROUTINES, new ArrayList<SymTabEntry>());
+
+		// push symbol table onto stack
+		routineId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+
+		// set program identifier in symbol table stack
+		symTabStack.setProgramId(routineId);
+
+		
+		// NEED TO PARSE VARIABLE AND FUNCTION DECLARATIONS
+		
+		/*
+		VarDecParser varDecParser = new VarDecParser(this);
+		varDecParser.setDefinition(VARIABLE);
+		varDecParser.parse(token, routineId);
+		*/
+		
+		
+		Compound compound = new Compound(this);
+		ICodeNode rootNode = compound.parse(token);
+        iCode.setRoot(rootNode);
+		
+		
+		/*
+		// check if main() exists
+		if (symTabStack.lookupLocal("main") == null)
+			errorHandler.flag(token, MISSING_MAIN, this);
+		else { // call main()
+			
+			// NEED TO ADD CALL TO main()
+			
+			
+			
+			
+			
+			
+			
+		}
+		*/
+		
+		// pop program symbol table off stack
+		symTabStack.pop();
+		
+		return null;
+	}
+	
 }

@@ -17,7 +17,7 @@ import static wci.message.MessageType.SYNTAX_ERROR;
  */
 public class CErrorHandler
 {
-    private static final int MAX_ERRORS = 25;
+    private static final int MAX_ERRORS = 5;
 
     private static int errorCount = 0;   // count of syntax errors
 

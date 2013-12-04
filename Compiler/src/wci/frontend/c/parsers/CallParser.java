@@ -9,7 +9,6 @@ import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 import wci.intermediate.icodeimpl.*;
 import wci.intermediate.typeimpl.*;
-
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -58,12 +57,7 @@ public class CallParser extends StatementParser
     }
 
     // Synchronization set for the , token.
-    private static final EnumSet<CTokenType> COMMA_SET =
-        ExpressionParser.EXPR_START_SET.clone();
-    static {
-        COMMA_SET.add(COMMA);
-        COMMA_SET.add(RIGHT_PAREN);
-    };
+    private static final EnumSet<CTokenType> COMMA_SET = EnumSet.of(PLUS, MINUS, IDENTIFIER, INT, FLOAT, CHAR, CTokenType.NOT, LEFT_PAREN, COMMA, RIGHT_PAREN);
 
     /**
      * Parse the actual parameters of a procedure or function call.
