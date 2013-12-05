@@ -31,7 +31,6 @@ public class VarDecParser extends DeclarationsParser {
 	static final EnumSet<CTokenType> NEXT_START_SET = EnumSet.of(IDENTIFIER, SEMICOLON);
 
 	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
-		
 		while (token.getText().compareTo("int") == 0 || token.getText().compareTo("float") == 0 || token.getText().compareTo("char") == 0) {
 			// parse identifier sublist and type spec
 			parseIdentifierSublist(token, IDENTIFIER_FOLLOW_SET, COMMA_SET);
@@ -46,7 +45,6 @@ public class VarDecParser extends DeclarationsParser {
 				errorHandler.flag(token, MISSING_SEMICOLON, this);
 			token = currentToken();
 		}
-		
 		return null;
 	}
 
@@ -76,7 +74,7 @@ public class VarDecParser extends DeclarationsParser {
 		return sublist;
 	}
 
-	private SymTabEntry parseIdentifier(Token token) throws Exception {
+	protected SymTabEntry parseIdentifier(Token token) throws Exception {
 		SymTabEntry id = null;
 		if (token.getType() == IDENTIFIER) {
 			String name = token.getText().toLowerCase();
@@ -95,12 +93,10 @@ public class VarDecParser extends DeclarationsParser {
 	}
 
 	protected TypeSpec parseTypeSpec(Token token) throws Exception {
-		TypeSpec type;
 		SymTabEntry id = symTabStack.lookup(token.getText().toLowerCase());
 		id.appendLineNumber(token.getLineNumber());
 		token = nextToken(); // consume the identifier
-		type = id.getTypeSpec(); // return type of the referent type
-		return type;
+		return id.getTypeSpec();
 	}
 	
 }

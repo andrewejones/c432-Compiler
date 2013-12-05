@@ -47,12 +47,15 @@ public class ProgramParser extends DeclarationsParser {
 		varDecParser.setDefinition(VARIABLE);
 		varDecParser.parse(token, routineId);
 		*/
-		
-		
+		/*
 		Compound compound = new Compound(this);
 		ICodeNode rootNode = compound.parse(token);
         iCode.setRoot(rootNode);
-		
+		*/
+        
+        RoutineParser routineParser = new RoutineParser(this);
+        routineParser.parse(token, routineId);
+        
 		
 		/*
 		// check if main() exists
