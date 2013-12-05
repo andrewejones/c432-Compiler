@@ -1,8 +1,0 @@
-
-int test(int a) {
-	int b;
-	b = a;
-	while(true) {
-		b = a;
-	}
-}

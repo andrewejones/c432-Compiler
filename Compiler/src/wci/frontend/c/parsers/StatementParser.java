@@ -70,6 +70,25 @@ public class StatementParser extends CParserTD {
 				statementNode = ifParser.parse(token);
 				break;
 			}
+			case RETURN: {
+				// need to know function name here!!!
+				// if function type is int/float/char, set function identifier value equal to expression.
+				// whether void/char/int, float, skip to end of function (pop from stack...?)
+				
+				
+				
+				
+				//errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+				token = nextToken();
+				token = nextToken();
+				
+				symTabStack.pop();
+				
+				
+				
+				break;
+				
+			}
 			default: {
 				statementNode = ICodeFactory.createICodeNode(NO_OP);
 				break;
@@ -91,11 +110,15 @@ public class StatementParser extends CParserTD {
 		terminatorSet.add(terminator);
 		// loop to parse statements until the } or EOF
 		while (!(token instanceof EofToken) && (token.getType() != terminator)) {
+			
+			
+			
 			// parse statement; parent node adopts statement node
 			ICodeNode statementNode = parse(token);
 			parentNode.addChild(statementNode);
 			// sync at next statement or terminator
 			token = synchronize(terminatorSet);
+			
 			// look for semicolon between statements
 			if (token.getType() == SEMICOLON)
 				token = nextToken(); // consume ;

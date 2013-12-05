@@ -3,51 +3,26 @@ package wci.frontend.c.parsers;
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
-
 import static wci.frontend.c.CTokenType.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
-/**
- * <h1>DeclaredCallParser</h1>
- *
- * <p>Parse a called to a declared procedure or function.</p>
- *
- * <p>Copyright (c) 2009 by Ronald Mak</p>
- * <p>For instructional purposes only.  No warranties.</p>
- */
-public class CallDeclaredParser extends CallParser
-{
-    /**
-     * Constructor.
-     * @param parent the parent parser.
-     */
-    public CallDeclaredParser(CParserTD parent)
-    {
-        super(parent);
-    }
+public class CallDeclaredParser extends CallParser {
 
-    /**
-     * Parse a call to a declared procedure or function.
-     * @param token the initial token.
-     * @return the root node of the generated parse tree.
-     * @throws Exception if an error occurred.
-     */
-    public ICodeNode parse(Token token)
-        throws Exception
-    {
-        // Create the CALL node.
-        ICodeNode callNode = ICodeFactory.createICodeNode(CALL);
-        SymTabEntry pfId = symTabStack.lookup(token.getText().toLowerCase());
-        callNode.setAttribute(ID, pfId);
-        callNode.setTypeSpec(pfId.getTypeSpec());
+	public CallDeclaredParser(CParserTD parent) {
+		super(parent);
+	}
 
-        token = nextToken();  // consume procedure or function identifier
-
-        ICodeNode parmsNode = parseActualParameters(token, pfId,
-                                                    true, false, false);
-
-        callNode.addChild(parmsNode);
-        return callNode;
-    }
+	public ICodeNode parse(Token token) throws Exception {
+		// create the CALL node
+		ICodeNode callNode = ICodeFactory.createICodeNode(CALL);
+		SymTabEntry pfId = symTabStack.lookup(token.getText().toLowerCase());
+		callNode.setAttribute(ID, pfId);
+		callNode.setTypeSpec(pfId.getTypeSpec());
+		token = nextToken(); // consume identifier
+		ICodeNode parmsNode = parseActualParameters(token, pfId, true, false, false);
+		callNode.addChild(parmsNode);
+		return callNode;
+	}
+	
 }

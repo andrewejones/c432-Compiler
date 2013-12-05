@@ -27,6 +27,7 @@ public class Predefined
     public static TypeSpec realType;
     public static TypeSpec booleanType;
     public static TypeSpec charType;
+    public static TypeSpec voidType;
     public static TypeSpec undefinedType;
 
     // Predefined identifiers.
@@ -34,6 +35,7 @@ public class Predefined
     public static SymTabEntry realId;
     public static SymTabEntry booleanId;
     public static SymTabEntry charId;
+    public static SymTabEntry voidId;
     public static SymTabEntry falseId;
     public static SymTabEntry trueId;
     public static SymTabEntry writeId;
@@ -83,6 +85,13 @@ public class Predefined
         charType.setIdentifier(charId);
         charId.setDefinition(DefinitionImpl.TYPE);
         charId.setTypeSpec(charType);
+        
+        // Type void.
+        voidId = symTabStack.enterLocal("void");
+        voidType = TypeFactory.createType(VOID);
+        voidType.setIdentifier(voidId);
+        voidId.setDefinition(DefinitionImpl.TYPE);
+        voidId.setTypeSpec(voidType);
 
         // Undefined type.
         undefinedType = TypeFactory.createType(SCALAR);
@@ -129,14 +138,12 @@ public class Predefined
      * @param defn either PROCEDURE or FUNCTION.
      * @param name the procedure or function name.
      */
-    private static SymTabEntry enterStandard(SymTabStack symTabStack,
-                                             Definition defn, String name,
-                                             RoutineCode routineCode)
+    private static SymTabEntry enterStandard(SymTabStack symTabStack, Definition defn, String name, RoutineCode routineCode)
     {
         SymTabEntry procId = symTabStack.enterLocal(name);
         procId.setDefinition(defn);
         procId.setAttribute(ROUTINE_CODE, routineCode);
-
         return procId;
     }
+    
 }
