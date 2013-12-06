@@ -18,7 +18,7 @@ import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 import static wci.intermediate.typeimpl.TypeFormImpl.*;
 
 public class CallParser extends StatementParser {
-	
+
 	public CallParser(CParserTD parent) {
 		super(parent);
 	}
@@ -49,7 +49,6 @@ public class CallParser extends StatementParser {
 			return null;
 		}
 		token = nextToken(); // consume opening (
-
 		// loop to parse parameters
 		while (token.getType() != RIGHT_PAREN) {
 			ICodeNode actualNode = expressionParser.parse(token);
@@ -79,7 +78,7 @@ public class CallParser extends StatementParser {
 				TypeForm form = type.getForm();
 
 				if (!((form == SCALAR) || (type == Predefined.booleanType) || (type
-						.isCString()))) {
+						.isPascalString()))) {
 					errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
 				}
 
@@ -116,16 +115,6 @@ public class CallParser extends StatementParser {
 		return parmsNode;
 	}
 
-	/**
-	 * Check an actual parameter against the corresponding formal parameter.
-	 * 
-	 * @param token
-	 *            the current token.
-	 * @param formalId
-	 *            the symbol table entry of the formal parameter.
-	 * @param actualNode
-	 *            the parse tree node of the actual parameter.
-	 */
 	private void checkActualParameter(Token token, SymTabEntry formalId,
 			ICodeNode actualNode) {
 		TypeSpec formalType = formalId.getTypeSpec();
@@ -138,32 +127,19 @@ public class CallParser extends StatementParser {
 		}
 	}
 
-	/**
-	 * Parse the field width or the precision for an actual parameter of a call
-	 * to write or writeln.
-	 * 
-	 * @param token
-	 *            the current token.
-	 * @return the INTEGER_CONSTANT node or null
-	 * @throws Exception
-	 *             if an error occurred.
-	 */
 	private ICodeNode parseWriteSpec(Token token) throws Exception {
 		if (token.getType() == COLON) {
 			token = nextToken(); // consume :
-
 			ExpressionParser expressionParser = new ExpressionParser(this);
 			ICodeNode specNode = expressionParser.parse(token);
-
-			if (specNode.getType() == INTEGER_CONSTANT) {
+			if (specNode.getType() == INTEGER_CONSTANT)
 				return specNode;
-			} else {
+			else {
 				errorHandler.flag(token, INVALID_NUMBER, this);
 				return null;
 			}
-		} else {
+		} else
 			return null;
-		}
 	}
-	
+
 }

@@ -374,7 +374,7 @@ public class ExpressionParser extends StatementParser {
 
 		case CHAR: {
 			// Create a CHAR_CONSTANT node as the root node.
-			rootNode = ICodeFactory.createICodeNode(CHAR_CONSTANT);
+			rootNode = ICodeFactory.createICodeNode(STRING_CONSTANT);
 			rootNode.setAttribute(VALUE, token.getValue());
 
 			token = nextToken(); // consume the char
@@ -472,7 +472,7 @@ public class ExpressionParser extends StatementParser {
 				rootNode = ICodeFactory.createICodeNode(REAL_CONSTANT);
 				rootNode.setAttribute(VALUE, value);
 			} else if (value instanceof Character) {
-				rootNode = ICodeFactory.createICodeNode(CHAR_CONSTANT);
+				rootNode = ICodeFactory.createICodeNode(STRING_CONSTANT);
 				rootNode.setAttribute(VALUE, value);
 			}
 

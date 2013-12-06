@@ -82,6 +82,11 @@ public class StatementExecutor extends Executor
                 CallExecutor callExecutor = new CallExecutor(this);
                 return callExecutor.execute(node);
             }
+            
+            case RETURN: {
+                ReturnExecutor returnExecutor = new ReturnExecutor(this);
+                return returnExecutor.execute(node);
+            }
 
             case NO_OP: return null;
 
@@ -106,7 +111,7 @@ public class StatementExecutor extends Executor
             if (targetType == Predefined.charType) {
                 return string.charAt(0);  // Pascal character
             }
-            else if (targetType.isCString()) {
+            else if (targetType.isPascalString()) {
                 Cell charCells[] = new Cell[string.length()];
 
                 // Build an array of characters.

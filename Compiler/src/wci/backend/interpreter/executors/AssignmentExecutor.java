@@ -89,7 +89,7 @@ public class AssignmentExecutor extends StatementExecutor
         // String assignment:
         //   target length < value length: truncate the value
         //   target length > value length: blank pad the value
-        else if (targetType.isCString()) {
+        else if (targetType.isPascalString()) {
             int targetLength =
                     (Integer) targetType.getAttribute(ARRAY_ELEMENT_COUNT);
             int valueLength =

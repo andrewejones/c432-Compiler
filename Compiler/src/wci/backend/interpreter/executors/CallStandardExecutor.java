@@ -277,7 +277,7 @@ public class CallStandardExecutor extends CallExecutor
                 ArrayList<ICodeNode> children = writeParmNode.getChildren();
                 ICodeNode exprNode = children.get(0);
                 TypeSpec dataType = exprNode.getTypeSpec().baseType();
-                String typeCode = dataType.isCString()          ? "s"
+                String typeCode = dataType.isPascalString()          ? "s"
                                 : dataType == Predefined.integerType ? "d"
                                 : dataType == Predefined.realType    ? "f"
                                 : dataType == Predefined.booleanType ? "s"
@@ -285,11 +285,6 @@ public class CallStandardExecutor extends CallExecutor
                                 :                                      "s";
                 Object value = expressionExecutor.execute(exprNode);
 
-                if ((dataType == Predefined.charType) &&
-                    (value instanceof String))
-                {
-                    value = ((String) value).charAt(0);
-                }
 
                 // Java format string.
                 StringBuilder format = new StringBuilder("%");
@@ -308,7 +303,7 @@ public class CallStandardExecutor extends CallExecutor
                 format.append(typeCode);
 
                 // Write the formatted value to the standard output.
-                standardOut.printf(format.toString(), value);
+                standardOut.print(value);
                 standardOut.flush();
             }
         }

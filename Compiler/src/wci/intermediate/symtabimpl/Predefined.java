@@ -3,7 +3,6 @@ package wci.intermediate.symtabimpl;
 import java.util.ArrayList;
 
 import wci.intermediate.*;
-import wci.intermediate.symtabimpl.*;
 
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -38,8 +37,28 @@ public class Predefined
     public static SymTabEntry voidId;
     public static SymTabEntry falseId;
     public static SymTabEntry trueId;
+    public static SymTabEntry readId;
+    public static SymTabEntry readlnId;
     public static SymTabEntry writeId;
     public static SymTabEntry writelnId;
+    public static SymTabEntry printfId;
+    public static SymTabEntry absId;
+    public static SymTabEntry arctanId;
+    public static SymTabEntry chrId;
+    public static SymTabEntry cosId;
+    public static SymTabEntry eofId;
+    public static SymTabEntry eolnId;
+    public static SymTabEntry expId;
+    public static SymTabEntry lnId;
+    public static SymTabEntry oddId;
+    public static SymTabEntry ordId;
+    public static SymTabEntry predId;
+    public static SymTabEntry roundId;
+    public static SymTabEntry sinId;
+    public static SymTabEntry sqrId;
+    public static SymTabEntry sqrtId;
+    public static SymTabEntry succId;
+    public static SymTabEntry truncId;
 
     /**
      * Initialize a symbol table stack with predefined identifiers.
@@ -88,7 +107,7 @@ public class Predefined
         
         // Type void.
         voidId = symTabStack.enterLocal("void");
-        voidType = TypeFactory.createType(VOID);
+        voidType = TypeFactory.createType(SCALAR);
         voidType.setIdentifier(voidId);
         voidId.setDefinition(DefinitionImpl.TYPE);
         voidId.setTypeSpec(voidType);
@@ -128,8 +147,29 @@ public class Predefined
      */
     private static void initializeStandardRoutines(SymTabStack symTabStack)
     {
+        readId    = enterStandard(symTabStack, PROCEDURE, "read",    READ);
+        readlnId  = enterStandard(symTabStack, PROCEDURE, "readln",  READLN);
         writeId   = enterStandard(symTabStack, PROCEDURE, "write",   WRITE);
         writelnId = enterStandard(symTabStack, PROCEDURE, "writeln", WRITELN);
+        printfId  = enterStandard(symTabStack, PROCEDURE, "printf",  PRINTF);
+
+        absId    = enterStandard(symTabStack, FUNCTION, "abs",    ABS);
+        arctanId = enterStandard(symTabStack, FUNCTION, "arctan", ARCTAN);
+        chrId    = enterStandard(symTabStack, FUNCTION, "chr",    CHR);
+        cosId    = enterStandard(symTabStack, FUNCTION, "cos",    COS);
+        eofId    = enterStandard(symTabStack, FUNCTION, "eof",    EOF);
+        eolnId   = enterStandard(symTabStack, FUNCTION, "eoln",   EOLN);
+        expId    = enterStandard(symTabStack, FUNCTION, "exp",    EXP);
+        lnId     = enterStandard(symTabStack, FUNCTION, "ln",     LN);
+        oddId    = enterStandard(symTabStack, FUNCTION, "odd",    ODD);
+        ordId    = enterStandard(symTabStack, FUNCTION, "ord",    ORD);
+        predId   = enterStandard(symTabStack, FUNCTION, "pred",   PRED);
+        roundId  = enterStandard(symTabStack, FUNCTION, "round",  ROUND);
+        sinId    = enterStandard(symTabStack, FUNCTION, "sin",    SIN);
+        sqrId    = enterStandard(symTabStack, FUNCTION, "sqr",    SQR);
+        sqrtId   = enterStandard(symTabStack, FUNCTION, "sqrt",   SQRT);
+        succId   = enterStandard(symTabStack, FUNCTION, "succ",   SUCC);
+        truncId  = enterStandard(symTabStack, FUNCTION, "trunc",  TRUNC);
     }
 
     /**
@@ -138,12 +178,14 @@ public class Predefined
      * @param defn either PROCEDURE or FUNCTION.
      * @param name the procedure or function name.
      */
-    private static SymTabEntry enterStandard(SymTabStack symTabStack, Definition defn, String name, RoutineCode routineCode)
+    private static SymTabEntry enterStandard(SymTabStack symTabStack,
+                                             Definition defn, String name,
+                                             RoutineCode routineCode)
     {
         SymTabEntry procId = symTabStack.enterLocal(name);
         procId.setDefinition(defn);
         procId.setAttribute(ROUTINE_CODE, routineCode);
+
         return procId;
     }
-    
 }
