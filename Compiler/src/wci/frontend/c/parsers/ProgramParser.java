@@ -10,6 +10,7 @@ import wci.intermediate.symtabimpl.DefinitionImpl;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.ID;
+import static wci.intermediate.icodeimpl.ICodeKeyImpl.LINE;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.CALL;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.COMPOUND;
 import static wci.intermediate.symtabimpl.DefinitionImpl.VARIABLE;
@@ -52,6 +53,7 @@ public class ProgramParser extends DeclarationsParser {
 		if (symTabStack.lookupLocal("main") == null)
 			errorHandler.flag(token, MISSING_MAIN, this);
 		else { // call main()
+			
 			ICodeNode callNode = ICodeFactory.createICodeNode(CALL);
 			SymTabEntry pfId = symTabStack.lookupLocal("main");
 			callNode.setAttribute(ID, pfId);

@@ -93,9 +93,6 @@ public class SelectExecutor extends StatementExecutor
                 // Create a jump table entry.
                 // Convert a single-character string constant to a character.
                 Object value = constantNode.getAttribute(VALUE);
-                if (constantNode.getType() == CHAR_CONSTANT) {
-                    value = ((String) value).charAt(0);
-                }
                 jumpTable.put(value, statementNode);
             }
         }
