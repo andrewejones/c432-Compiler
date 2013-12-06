@@ -20,6 +20,8 @@ public class SymTabImpl
     implements SymTab
 {
     private int nestingLevel;
+	public String funcname = null;
+	public boolean isfunc = false;
 
     public SymTabImpl(int nestingLevel)
     {

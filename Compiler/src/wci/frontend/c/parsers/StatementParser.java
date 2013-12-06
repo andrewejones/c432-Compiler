@@ -4,6 +4,7 @@ import java.util.EnumSet;
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
+import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
 import wci.intermediate.symtabimpl.*;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
@@ -45,7 +46,7 @@ public class StatementParser extends CParserTD {
 					}
 					case FUNCTION: {
 						Assignment assignmentParser = new Assignment(this);
-						statementNode = assignmentParser.parseFunctionNameAssignment(token);
+						statementNode = assignmentParser.parseReturn(token);
 						break;
 					}
 					case PROCEDURE: {
@@ -71,23 +72,23 @@ public class StatementParser extends CParserTD {
 				break;
 			}
 			case RETURN: {
-				// need to know function name here!!!
-				// if function type is int/float/char, set function identifier value equal to expression.
-				// whether void/char/int, float, skip to end of function (pop from stack...?)
-				
-				
-				
-				
-				//errorHandler.flag(token, UNEXPECTED_TOKEN, this);
-				token = nextToken();
-				token = nextToken();
-				
-				symTabStack.pop();
-				
-				
-				
+				SymTab symTab = symTabStack.getLocalSymTab();
+	        	boolean isfunc = ((SymTabImpl)symTab).isfunc;
+	        	if (isfunc) {
+	        		Assignment assignmentParser = new Assignment(this);
+	        		ICodeNode assignNode = assignmentParser.parseReturn(token);
+	        		setLineNumber(assignNode, token);
+	        		statementNode = ICodeFactory.createICodeNode(COMPOUND);
+	        		statementNode.addChild(assignNode);
+	        		ICodeNode returnNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.RETURN);
+	        		setLineNumber(returnNode, token);
+	        		statementNode.addChild(returnNode);	        		
+	        	}
+	        	else {
+					statementNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.RETURN);
+	        		token = nextToken();
+	        	}
 				break;
-				
 			}
 			default: {
 				statementNode = ICodeFactory.createICodeNode(NO_OP);
@@ -110,15 +111,11 @@ public class StatementParser extends CParserTD {
 		terminatorSet.add(terminator);
 		// loop to parse statements until the } or EOF
 		while (!(token instanceof EofToken) && (token.getType() != terminator)) {
-			
-			
-			
 			// parse statement; parent node adopts statement node
 			ICodeNode statementNode = parse(token);
 			parentNode.addChild(statementNode);
 			// sync at next statement or terminator
 			token = synchronize(terminatorSet);
-			
 			// look for semicolon between statements
 			if (token.getType() == SEMICOLON)
 				token = nextToken(); // consume ;

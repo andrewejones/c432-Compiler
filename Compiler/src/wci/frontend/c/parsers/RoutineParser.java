@@ -42,6 +42,7 @@ public class RoutineParser extends DeclarationsParser {
 		} else
 			errorHandler.flag(token, UNEXPECTED_TOKEN, this);
 		// parse routine name
+		String name = token.getText();
 		routineId = parseRoutineName(token, dummyName);
 		routineId.setDefinition(routineDefn);
 		token = currentToken();
@@ -52,8 +53,13 @@ public class RoutineParser extends DeclarationsParser {
 		// push routines symbol table onto stack; if forwarded, push existing symbol table
 		if (routineId.getAttribute(ROUTINE_CODE) == FORWARD)
 			symTabStack.push((SymTab) routineId.getAttribute(ROUTINE_SYMTAB));
-		else
-			routineId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+		else {
+			SymTab symtab = symTabStack.push();
+			routineId.setAttribute(ROUTINE_SYMTAB, symtab);
+			((SymTabImpl)symtab).funcname = name;
+			if (routineDefn == DefinitionImpl.FUNCTION)
+				((SymTabImpl)symtab).isfunc = true;
+		}
 		// non forwarded procedure, add to parents list of routines
 		if (routineId.getAttribute(ROUTINE_CODE) != FORWARD) {
 			ArrayList<SymTabEntry> subroutines = (ArrayList<SymTabEntry>) parentId.getAttribute(ROUTINE_ROUTINES);
@@ -61,10 +67,12 @@ public class RoutineParser extends DeclarationsParser {
 		}
 		// if routine was forwarded ignore parameters
 		if (routineId.getAttribute(ROUTINE_CODE) == FORWARD) {
-			if (token.getType() == LEFT_PAREN)
+			if (token.getType() == LEFT_PAREN) {
 				do {
 					token = nextToken();
 				} while (token.getType() != RIGHT_PAREN);
+				token = nextToken(); // consume )
+			}
 		// parse routines parameters
 		} else
 			parseHeader(token, routineId, type);
@@ -73,7 +81,7 @@ public class RoutineParser extends DeclarationsParser {
 		if (token.getType() == SEMICOLON) {
 			token = nextToken(); // consume ;
 			routineId.setAttribute(ROUTINE_CODE, FORWARD);
-		} else if (token.getType() == LEFT_BRACE) {
+		} else if (token.getType() == LEFT_BRACE) { // SOMEWHERE IN HERE, maybe we need to pass in routine token
 			routineId.setAttribute(ROUTINE_CODE, DECLARED);
 			Compound compound = new Compound(this);
 			ICodeNode rootNode = compound.parse(token);

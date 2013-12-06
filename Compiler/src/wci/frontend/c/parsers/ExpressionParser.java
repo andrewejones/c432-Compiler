@@ -212,8 +212,7 @@ public class ExpressionParser extends StatementParser {
 	}
 
 	// Set of multiplicative operators.
-	private static final EnumSet<CTokenType> MULT_OPS = EnumSet.of(STAR, SLASH,
-			CTokenType.MOD, CTokenType.AND);
+	private static final EnumSet<CTokenType> MULT_OPS = EnumSet.of(STAR, SLASH, CTokenType.MOD, CTokenType.AND);
 
 	// Map multiplicative operator tokens to node types.
 	private static final HashMap<CTokenType, ICodeNodeType> MULT_OPS_OPS_MAP = new HashMap<CTokenType, ICodeNodeType>();
