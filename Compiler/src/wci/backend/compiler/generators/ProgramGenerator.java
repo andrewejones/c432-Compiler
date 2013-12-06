@@ -38,7 +38,7 @@ public class ProgramGenerator extends CodeGenerator
      * @param node the root node of the program.
      */
     public void generate(ICodeNode node)
-        throws PascalCompilerException
+        throws CCompilerException
     {
         SymTabEntry programId = symTabStack.getProgramId();
 
@@ -64,7 +64,7 @@ public class ProgramGenerator extends CodeGenerator
         // Runtime timer and standard in.
         emitBlankLine();
         emitDirective(FIELD_PRIVATE_STATIC, "_runTimer",   "LRunTimer;");
-        emitDirective(FIELD_PRIVATE_STATIC, "_standardIn", "LPascalTextIn;");
+        emitDirective(FIELD_PRIVATE_STATIC, "_standardIn", "LCTextIn;");
 
         SymTab symTab = (SymTab) programId.getAttribute(ROUTINE_SYMTAB);
         ArrayList<SymTabEntry> ids = symTab.sortedEntries();
@@ -107,7 +107,7 @@ public class ProgramGenerator extends CodeGenerator
      * Generate code for any nested procedures and functions.
      */
     private void generateRoutines()
-        throws PascalCompilerException
+        throws CCompilerException
     {
         DeclaredRoutineGenerator declaredRoutineGenerator =
             new DeclaredRoutineGenerator(this);
@@ -124,7 +124,7 @@ public class ProgramGenerator extends CodeGenerator
      * Generate code for the program body as the main method.
      */
     private void generateMainMethod()
-        throws PascalCompilerException
+        throws CCompilerException
     {
         emitBlankLine();
         emitDirective(METHOD_PUBLIC_STATIC, "main([Ljava/lang/String;)V");
@@ -155,10 +155,10 @@ public class ProgramGenerator extends CodeGenerator
         emit(PUTSTATIC, programName + "/_runTimer", "LRunTimer;");
 
         // Standard in.
-        emit(NEW, "PascalTextIn");
+        emit(NEW, "CTextIn");
         emit(DUP);
-        emit(INVOKENONVIRTUAL, "PascalTextIn/<init>()V");
-        emit(PUTSTATIC, programName + "/_standardIn LPascalTextIn;");
+        emit(INVOKENONVIRTUAL, "CTextIn/<init>()V");
+        emit(PUTSTATIC, programName + "/_standardIn LCTextIn;");
 
         localStack.use(3);
     }
@@ -167,7 +167,7 @@ public class ProgramGenerator extends CodeGenerator
      * Generate code for the main method.
      */
     private void generateMainMethodCode()
-        throws PascalCompilerException
+        throws CCompilerException
     {
         ICode iCode = (ICode) programId.getAttribute(ROUTINE_ICODE);
         ICodeNode root = iCode.getRoot();

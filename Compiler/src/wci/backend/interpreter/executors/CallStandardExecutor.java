@@ -277,7 +277,7 @@ public class CallStandardExecutor extends CallExecutor
                 ArrayList<ICodeNode> children = writeParmNode.getChildren();
                 ICodeNode exprNode = children.get(0);
                 TypeSpec dataType = exprNode.getTypeSpec().baseType();
-                String typeCode = dataType.isPascalString()          ? "s"
+                String typeCode = dataType.isCString()          ? "s"
                                 : dataType == Predefined.integerType ? "d"
                                 : dataType == Predefined.realType    ? "f"
                                 : dataType == Predefined.booleanType ? "s"

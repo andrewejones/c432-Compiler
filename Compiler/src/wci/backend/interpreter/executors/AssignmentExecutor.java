@@ -89,7 +89,7 @@ public class AssignmentExecutor extends StatementExecutor
         // String assignment:
         //   target length < value length: truncate the value
         //   target length > value length: blank pad the value
-        else if (targetType.isPascalString()) {
+        else if (targetType.isCString()) {
             int targetLength =
                     (Integer) targetType.getAttribute(ARRAY_ELEMENT_COUNT);
             int valueLength =
@@ -112,13 +112,13 @@ public class AssignmentExecutor extends StatementExecutor
                 stringValue = buffer.toString();
             }
 
-            targetCell.setValue(copyOf(toPascal(targetType, stringValue),
+            targetCell.setValue(copyOf(toC(targetType, stringValue),
                                        node));
         }
 
         // Simple assignment.
         else {
-            targetCell.setValue(copyOf(toPascal(targetType, value), node));
+            targetCell.setValue(copyOf(toC(targetType, value), node));
         }
 
         sendAssignMessage(node, targetId.getName(), value);

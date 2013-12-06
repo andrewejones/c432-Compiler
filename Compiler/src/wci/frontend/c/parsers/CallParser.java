@@ -78,7 +78,7 @@ public class CallParser extends StatementParser {
 				TypeForm form = type.getForm();
 
 				if (!((form == SCALAR) || (type == Predefined.booleanType) || (type
-						.isPascalString()))) {
+						.isCString()))) {
 					errorHandler.flag(token, INCOMPATIBLE_TYPES, this);
 				}
 

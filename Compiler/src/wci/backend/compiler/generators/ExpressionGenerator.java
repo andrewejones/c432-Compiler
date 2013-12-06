@@ -306,8 +306,8 @@ public class ExpressionGenerator extends StatementGenerator
                            (nodeType == FLOAT_DIVIDE);
         boolean characterMode = TypeChecker.isChar(type1) &&
                                 TypeChecker.isChar(type2);
-        boolean stringMode = type1.isPascalString() &&
-                             type2.isPascalString();
+        boolean stringMode = type1.isCString() &&
+                             type2.isCString();
 
         if (!stringMode) {
             // Emit code to evaluate the first operand.

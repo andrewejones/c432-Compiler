@@ -41,6 +41,8 @@ public class ProgramParser extends DeclarationsParser {
 
 		// set program identifier in symbol table stack
 		symTabStack.setProgramId(routineId);
+		// slot number
+		 symTabStack.getLocalSymTab().nextSlotNumber();
 		
 		// parse routines
         RoutineParser routineParser = new RoutineParser(this);

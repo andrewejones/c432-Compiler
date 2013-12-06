@@ -19,11 +19,11 @@ public class SymTabImpl
     extends TreeMap<String, SymTabEntry>
     implements SymTab
 {
-    private int nestingLevel;
+    private int nestingLevel;       // scope nesting level of this entry
     private int slotNumber;         // local variables array slot number
     private int maxSlotNumber;      // max slot number value
-    public String funcname = null;
-    public boolean isfunc = false;
+    public String funcname = null;      // max slot number value
+    public boolean isfunc = false;      // max slot number value
 
     /**
      * Constructor.
@@ -84,7 +84,7 @@ public class SymTabImpl
 
         return list;  // sorted list of entries
     }
-    
+
     /**
      * @return the next local variables array slot number.
      */
