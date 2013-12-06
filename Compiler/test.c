@@ -1,10 +1,11 @@
 int factorial(int num);
+void print(int num, int fact);
 
 void main() {
-	int num;
+	int num, fact;
 	num = 8;
-	num = factorial(num);
-	writeln(num);
+	fact = factorial(num);
+	print(num, fact);
 }
 
 int factorial(int num) {
@@ -15,4 +16,25 @@ int factorial(int num) {
 		num = num - 1;
 	}
 	return fact;
+}
+
+void print(int num, int fact) {
+	writeln('');
+	write('F');
+	write('a');
+	write('c');
+	write('t');
+	write('o');
+	write('r');
+	write('i');
+	write('a');
+	write('l');
+	write(' ');
+	write('o');
+	write('f');
+	write(' ');
+	write(num);
+	write(':');
+	write(' ');
+	writeln(fact);
 }
