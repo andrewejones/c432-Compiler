@@ -31,7 +31,7 @@ public class CompoundGenerator extends StatementGenerator
      * @param node the root node of the compound statement.
      */
     public void generate(ICodeNode node)
-        throws CCompilerException
+        throws PascalCompilerException
     {
         ArrayList<ICodeNode> children = node.getChildren();
 

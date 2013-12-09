@@ -28,7 +28,7 @@ public class ProgramParser extends DeclarationsParser {
 	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
 		
 		// create dummy program named test
-		SymTabEntry routineId = symTabStack.enterLocal("'Team Redundancy Team'");
+		SymTabEntry routineId = symTabStack.enterLocal("test");
 		routineId.setDefinition(DefinitionImpl.PROGRAM);
 
 		// create intermediate code for calling main()
@@ -41,8 +41,9 @@ public class ProgramParser extends DeclarationsParser {
 
 		// set program identifier in symbol table stack
 		symTabStack.setProgramId(routineId);
-		// slot number
-		 symTabStack.getLocalSymTab().nextSlotNumber();
+		
+		// bump variable slot number to 1
+		symTabStack.getLocalSymTab().nextSlotNumber();
 		
 		// parse routines
         RoutineParser routineParser = new RoutineParser(this);
@@ -52,14 +53,14 @@ public class ProgramParser extends DeclarationsParser {
         } while(token.getText().compareTo("void") == 0 || token.getText().compareTo("int") == 0 || token.getText().compareTo("float") == 0 || token.getText().compareTo("char") == 0);
         
 		// check if main() exists
-		if (symTabStack.lookupLocal("main") == null)
+        SymTabEntry mainId = symTabStack.lookupLocal("main");
+		if (mainId == null)
 			errorHandler.flag(token, MISSING_MAIN, this);
 		else { // call main()
-			
 			ICodeNode callNode = ICodeFactory.createICodeNode(CALL);
-			SymTabEntry pfId = symTabStack.lookupLocal("main");
-			callNode.setAttribute(ID, pfId);
+			callNode.setAttribute(ID, mainId);
 			// force main as void
+			callNode.setAttribute(LINE, mainId.getLineNumbers().get(0).intValue());
 			callNode.setTypeSpec(symTabStack.lookup("void").getTypeSpec());
 			iCode.setRoot(callNode);
 		}

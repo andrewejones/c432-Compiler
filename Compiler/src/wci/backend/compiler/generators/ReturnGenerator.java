@@ -33,7 +33,7 @@ public class ReturnGenerator extends StatementGenerator
      * @param node the root node of the statement.
      */
     public void generate(ICodeNode node)
-        throws CCompilerException
+        throws PascalCompilerException
     {       
        newLabel = Label.newLabel();
        emit(GOTO, newLabel);

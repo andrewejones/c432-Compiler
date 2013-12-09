@@ -24,6 +24,7 @@ public class Assignment extends StatementParser {
 
 	public ICodeNode parse(Token token) throws Exception {
 		ICodeNode assignNode = ICodeFactory.createICodeNode(ASSIGN); // create assign node
+        setLineNumber(assignNode, token);
 		SymTabEntry targetid = null;
 		String targetname = token.getText();
 		if (targetname.equals("return") || isReturn) {

@@ -133,7 +133,7 @@ public class TypeChecker
         // string := string
         else {
             compatible =
-                targetType.isCString() && valueType.isCString();
+                targetType.isPascalString() && valueType.isPascalString();
         }
 
         return compatible;
@@ -170,7 +170,7 @@ public class TypeChecker
 
         // Two strings.
         else {
-            compatible = type1.isCString() && type2.isCString();
+            compatible = type1.isPascalString() && type2.isPascalString();
         }
 
         return compatible;

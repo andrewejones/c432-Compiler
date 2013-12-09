@@ -86,7 +86,7 @@ public class AssignmentGenerator extends StatementGenerator
         if (childrenCount > 0) {
             lastModifier = targetChildren.get(childrenCount-1);
 
-            if (assignmentType.isCString()) {
+            if (assignmentType.isPascalString()) {
                 exprGenerator.generateLoadValue(targetNode);
             }
             else {
@@ -94,14 +94,14 @@ public class AssignmentGenerator extends StatementGenerator
             }
         }
 
-        // Assign to a C string.
-        else if (assignmentType.isCString()) {
+        // Assign to a Pascal string.
+        else if (assignmentType.isPascalString()) {
             emitLoadVariable(targetId);
             localStack.increase(1);
         }
 
         // Generate code to do the assignment.
-        if (targetType.isCString()) {
+        if (targetType.isPascalString()) {
             generateStringAssignment(assignmentType, exprNode,
                                      exprType, exprGenerator);
         }
@@ -207,7 +207,7 @@ public class AssignmentGenerator extends StatementGenerator
         "java/lang/String.substring(II)Ljava/lang/String;";
 
     /**
-     * Generate code to assign a C string value.
+     * Generate code to assign a Pascal string value.
      * @param targetType the data type of the target variable.
      * @param exprNode the expression tree node.
      * @param exprType the expression data type.

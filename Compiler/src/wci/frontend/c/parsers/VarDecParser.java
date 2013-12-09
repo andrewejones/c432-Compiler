@@ -2,11 +2,13 @@ package wci.frontend.c.parsers;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.SLOT;
 
 public class VarDecParser extends DeclarationsParser {
 	private Definition definition; // how to define identifier
@@ -84,6 +86,9 @@ public class VarDecParser extends DeclarationsParser {
 				id = symTabStack.enterLocal(name);
 				id.setDefinition(definition);
 				id.appendLineNumber(token.getLineNumber());
+                // set slot number in the local variable array
+                int slot = id.getSymTab().nextSlotNumber();
+                id.setAttribute(SLOT, slot);
 			} else
 				errorHandler.flag(token, IDENTIFIER_REDEFINED, this);
 			token = nextToken(); // consume identifier

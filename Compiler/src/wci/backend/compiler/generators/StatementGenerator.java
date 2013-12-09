@@ -38,7 +38,7 @@ public class StatementGenerator extends CodeGenerator
      * @param node the root node of the statement.
      */
     public void generate(ICodeNode node)
-        throws CCompilerException
+        throws PascalCompilerException
     {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
         int line = 0;
@@ -98,7 +98,7 @@ public class StatementGenerator extends CodeGenerator
 
         // Verify that the stack height after each statement is 0.
         if (localStack.getSize() != 0) {
-            throw new CCompilerException(
+            throw new PascalCompilerException(
                 String.format("Stack size error: size = %d after line %d",
                               localStack.getSize(), line));
         }

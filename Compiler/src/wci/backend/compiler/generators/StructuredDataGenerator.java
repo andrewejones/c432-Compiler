@@ -52,7 +52,7 @@ public class StructuredDataGenerator extends CodeGenerator
                 if (isStructured(idType)) {
                     TypeForm idForm = idType.getForm();
 
-                    if (idType.isCString() || (idForm == RECORD)) {
+                    if (idType.isPascalString() || (idForm == RECORD)) {
                         generateAllocateData(id, idType);
                     }
                     else {
@@ -72,7 +72,7 @@ public class StructuredDataGenerator extends CodeGenerator
     {
         TypeForm form = type.getForm();
 
-        if (type.isCString()) {
+        if (type.isPascalString()) {
             generateAllocateString(variableId, type);
         }
         else if (form == ARRAY) {
@@ -102,7 +102,7 @@ public class StructuredDataGenerator extends CodeGenerator
             emitLoadConstant(size);
             elmtType = (TypeSpec) elmtType.getAttribute(ARRAY_ELEMENT_TYPE);
         } while ((elmtType.getForm() == ARRAY) &&
-                 (! elmtType.isCString()));
+                 (! elmtType.isPascalString()));
 
         // The array element type.
         elmtType = elmtType.baseType();
@@ -114,7 +114,7 @@ public class StructuredDataGenerator extends CodeGenerator
             : elmtType == Predefined.charType    ? "char"
             : elmtForm == ENUMERATION            ? "int"
             : elmtForm == RECORD                 ? "java/util/HashMap"
-            : elmtType.isCString()          ? "java/lang/StringBuilder"
+            : elmtType.isPascalString()          ? "java/lang/StringBuilder"
             :                                      null;
 
         // One-dimensional array.
@@ -175,7 +175,7 @@ public class StructuredDataGenerator extends CodeGenerator
         elmtType = (TypeSpec) elmtType.getAttribute(ARRAY_ELEMENT_TYPE);
 
         // Allocate data for a string or record element.
-        if (elmtType.isCString() || (elmtType.getForm() == RECORD)) {
+        if (elmtType.isPascalString() || (elmtType.getForm() == RECORD)) {
             emitLoadLocal(Predefined.integerType, tempIndex);
             localStack.increase(1);
 
@@ -274,7 +274,7 @@ public class StructuredDataGenerator extends CodeGenerator
             if (isStructured(idType)) {
                 TypeForm idForm = idType.getForm();
 
-                if (idType.isCString() || (idForm == RECORD)) {
+                if (idType.isPascalString() || (idForm == RECORD)) {
                     generateAllocateData(fieldId, idType);
                 }
                 else {

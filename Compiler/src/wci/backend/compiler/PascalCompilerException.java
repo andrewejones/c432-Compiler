@@ -8,9 +8,9 @@ package wci.backend.compiler;
  * <p>Copyright (c) 2009 by Ronald Mak</p>
  * <p>For instructional purposes only.  No warranties.</p>
  */
-public class CCompilerException extends Exception
+public class PascalCompilerException extends Exception
 {
-    public CCompilerException(String message)
+    public PascalCompilerException(String message)
     {
         super(message);
     }

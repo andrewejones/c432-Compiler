@@ -44,6 +44,7 @@ public class RoutineParser extends DeclarationsParser {
 		// parse routine name
 		String name = token.getText();
 		routineId = parseRoutineName(token, dummyName);
+		routineId.appendLineNumber(token.getLineNumber());
 		routineId.setDefinition(routineDefn);
 		token = currentToken();
 		// create intermediate code for routine
@@ -81,7 +82,7 @@ public class RoutineParser extends DeclarationsParser {
 		if (token.getType() == SEMICOLON) {
 			token = nextToken(); // consume ;
 			routineId.setAttribute(ROUTINE_CODE, FORWARD);
-		} else if (token.getType() == LEFT_BRACE) { // SOMEWHERE IN HERE, maybe we need to pass in routine token
+		} else if (token.getType() == LEFT_BRACE) {
 			routineId.setAttribute(ROUTINE_CODE, DECLARED);
 			Compound compound = new Compound(this);
 			ICodeNode rootNode = compound.parse(token);

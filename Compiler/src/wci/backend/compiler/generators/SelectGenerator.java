@@ -60,7 +60,7 @@ public class SelectGenerator extends StatementGenerator
      * @param node the root node of the statement.
      */
     public void generate(ICodeNode node)
-        throws CCompilerException
+        throws PascalCompilerException
     {
         ArrayList<ICodeNode> selectChildren = node.getChildren();
         ICodeNode exprNode = selectChildren.get(0);
@@ -163,11 +163,11 @@ public class SelectGenerator extends StatementGenerator
      * Generate code for the branch statements.
      * @param selectChildren the child nodes of the SELECT node.
      * @param branchLabels the branch labels
-     * @throws CCompilerException if an error occurred.
+     * @throws PascalCompilerException if an error occurred.
      */
     private void generateBranchStatements(ArrayList<ICodeNode> selectChildren,
                                           ArrayList<Label> branchLabels)
-        throws CCompilerException
+        throws PascalCompilerException
     {
         StatementGenerator stmtGenerator = new StatementGenerator(this);
         emitBlankLine();

@@ -35,7 +35,7 @@ public class BackendFactory
                                 operation + "'");
         }
     }
-    
+
     /**
      * Return the default value for a data type.
      * @param type the data type.

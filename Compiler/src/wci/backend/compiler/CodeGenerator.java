@@ -91,7 +91,7 @@ public class CodeGenerator extends Backend
      * @param node the root node of the statement.
      */
     public void generate(ICodeNode node)
-        throws CCompilerException
+        throws PascalCompilerException
     {
     }
 
@@ -101,7 +101,7 @@ public class CodeGenerator extends Backend
      * @param routineId the routine's symbol table entry.
      */
     public void generate(SymTabEntry routineId)
-        throws CCompilerException
+        throws PascalCompilerException
     {
     }
 
@@ -694,7 +694,7 @@ public class CodeGenerator extends Backend
     {
         TypeForm form = type.getForm();
 
-        return type.isCString() || (form == ARRAY) || (form == RECORD);
+        return type.isPascalString() || (form == ARRAY) || (form == RECORD);
     }
 
     /**
@@ -760,7 +760,7 @@ public class CodeGenerator extends Backend
         TypeForm form = type.getForm();
         StringBuffer buffer = new StringBuffer();
 
-        while ((form == ARRAY) && !type.isCString()) {
+        while ((form == ARRAY) && !type.isPascalString()) {
             buffer.append("[");
             type = (TypeSpec) type.getAttribute(ARRAY_ELEMENT_TYPE);
             form = type.getForm();
@@ -780,10 +780,7 @@ public class CodeGenerator extends Backend
         else if (type == Predefined.charType) {
             buffer.append("C");
         }
-        else if (type == Predefined.voidType) {
-        	buffer.append("V");
-        }
-        else if (type.isCString()) {
+        else if (type.isPascalString()) {
             buffer.append("Ljava/lang/StringBuilder;");
         }
         else if (form == ENUMERATION) {
@@ -807,7 +804,7 @@ public class CodeGenerator extends Backend
         StringBuffer buffer = new StringBuffer();
         boolean isArray = false;
 
-        while ((form == ARRAY) && !type.isCString()) {
+        while ((form == ARRAY) && !type.isPascalString()) {
             buffer.append("[");
             type = (TypeSpec) type.getAttribute(ARRAY_ELEMENT_TYPE);
             form = type.getForm();
@@ -832,7 +829,7 @@ public class CodeGenerator extends Backend
         else if (type == Predefined.charType) {
             buffer.append("java/lang/Character");
         }
-        else if (type.isCString()) {
+        else if (type.isPascalString()) {
             buffer.append("java/lang/StringBuilder");
         }
         else if (form == ENUMERATION) {

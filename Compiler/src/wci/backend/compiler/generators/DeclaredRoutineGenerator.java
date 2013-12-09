@@ -39,7 +39,8 @@ public class DeclaredRoutineGenerator extends CodeGenerator
      * Generate code for a declared procedure or function
      * @param routineId the symbol table entry of the routine's name.
      */
-    public void generate(SymTabEntry routineId) throws CCompilerException
+    public void generate(SymTabEntry routineId)
+        throws PascalCompilerException
     {
         this.routineId = routineId;
         this.routineName = routineId.getName();
@@ -109,15 +110,18 @@ public class DeclaredRoutineGenerator extends CodeGenerator
         for (SymTabEntry id : ids) {
             Definition defn = id.getDefinition();
 
-            if ((defn == VARIABLE) || (defn == VALUE_PARM)) {
+            if ((defn == VARIABLE) || (defn == VALUE_PARM)
+                                   || (defn == VAR_PARM)) {
                 int slot = (Integer) id.getAttribute(SLOT);
-                emitDirective(VAR, slot + " is " + id.getName(), typeDescriptor(id));
+                emitDirective(VAR, slot + " is " + id.getName(),
+                              typeDescriptor(id));
             }
         }
 
         // Emit an extra .var directive for an implied function variable.
         if (routineId.getDefinition() == FUNCTION) {
-            emitDirective(VAR, functionValueSlot + " is " + routineName, typeDescriptor(routineId.getTypeSpec()));
+            emitDirective(VAR, functionValueSlot + " is " + routineName,
+                          typeDescriptor(routineId.getTypeSpec()));
         }
     }
 
@@ -125,7 +129,7 @@ public class DeclaredRoutineGenerator extends CodeGenerator
      * Generate code for the routine's body.
      */
     private void generateRoutineCode()
-        throws CCompilerException
+        throws PascalCompilerException
     {
         ICode iCode = (ICode) routineId.getAttribute(ROUTINE_ICODE);
         ICodeNode root = iCode.getRoot();

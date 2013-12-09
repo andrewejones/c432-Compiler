@@ -74,15 +74,18 @@ public class StatementParser extends CParserTD {
 			case RETURN: {
 				SymTab symTab = symTabStack.getLocalSymTab();
 	        	boolean isfunc = ((SymTabImpl)symTab).isfunc;
-	        	if (isfunc) {
-	        		Assignment assignmentParser = new Assignment(this);
-	        		ICodeNode assignNode = assignmentParser.parseReturn(token);
-	        		setLineNumber(assignNode, token);
-	        		statementNode = ICodeFactory.createICodeNode(COMPOUND);
-	        		statementNode.addChild(assignNode);
-	        		ICodeNode returnNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.RETURN);
-	        		setLineNumber(returnNode, token);
-	        		statementNode.addChild(returnNode);	        		
+	        	if (isfunc) {	
+				Assignment assignmentParser = new Assignment(this);
+		        ICodeNode icodenode = assignmentParser.parseReturn(token);
+		        
+		        setLineNumber(icodenode, token);
+		        statementNode = ICodeFactory.createICodeNode(COMPOUND);
+		        statementNode.addChild(icodenode); 
+		        setLineNumber(statementNode, token);
+		        ICodeNode returnNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.NO_OP );
+		        setLineNumber(returnNode, token);
+		        statementNode.addChild(returnNode);			
+				break;	        		
 	        	}
 	        	else {
 					statementNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.RETURN);
