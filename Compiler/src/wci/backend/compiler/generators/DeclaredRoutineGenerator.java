@@ -23,7 +23,6 @@ public class DeclaredRoutineGenerator extends CodeGenerator
 {
     private SymTabEntry routineId;
     private String routineName;
-    static private Label returnLabel;
     private int functionValueSlot;  // function return value slot number
 
     /**
@@ -147,10 +146,6 @@ public class DeclaredRoutineGenerator extends CodeGenerator
     private void generateRoutineReturn()
     {
         emitBlankLine();
-        if(returnLabel != ReturnGenerator.getReturnLabel()){
-        	returnLabel = ReturnGenerator.getReturnLabel();
-        	emitLabel(returnLabel);
-        }
 
         // Function: Return the value in the implied function variable.
         if (routineId.getDefinition() == FUNCTION) {

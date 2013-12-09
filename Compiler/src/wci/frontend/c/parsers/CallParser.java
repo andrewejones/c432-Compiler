@@ -2,6 +2,7 @@ package wci.frontend.c.parsers;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
@@ -10,6 +11,7 @@ import wci.intermediate.icodeimpl.*;
 import wci.intermediate.typeimpl.*;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
+import static wci.frontend.sc.SCErrorCode.INVALID_PARM;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
@@ -64,6 +66,23 @@ public class CallParser extends StatementParser {
 				}
 			}
 
+			// read or readln: Each actual parameter must be a variable that is
+            //                 a scalar, boolean, or subrange of integer.
+            else if (isReadReadln) {
+                TypeSpec type = actualNode.getTypeSpec();
+                TypeForm form = type.getForm();
+
+                if (! (   (actualNode.getType() == ICodeNodeTypeImpl.VARIABLE)
+                       && ( (form == SCALAR) ||
+                            (type == Predefined.booleanType) ||
+                            ( (form == SUBRANGE) &&
+                              (type.baseType() == Predefined.integerType) ) )
+                      )
+                   )
+                {
+                    errorHandler.flag(token, INVALID_PARM, this);
+                }
+            }
 			// write or writeln: The type of each actual parameter must be a
 			// scalar, boolean, or a C string. Parse any field width and
 			// precision.
@@ -107,8 +126,7 @@ public class CallParser extends StatementParser {
 
 		token = nextToken(); // consume closing )
 
-		if ((parmsNode.getChildren().size() == 0)
-				|| (isDeclared && (parmIndex != parmCount - 1))) {
+		if ((isDeclared && (parmIndex != parmCount - 1))) {
 			errorHandler.flag(token, WRONG_NUMBER_OF_PARMS, this);
 		}
 

@@ -56,6 +56,9 @@ public class CallStandardGenerator extends CallGenerator
         }
 
         switch ((RoutineCodeImpl) routineCode) {
+	        case READ:
+	        case READLN:  generateReadReadln(node, routineCode); break;
+        
             case WRITE:
             case WRITELN: generateWriteWriteln(node, routineCode); break;
         }

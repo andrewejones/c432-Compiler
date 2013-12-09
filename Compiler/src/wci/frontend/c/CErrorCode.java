@@ -11,6 +11,7 @@ public enum CErrorCode {
 	INVALID_IDENTIFIER_USAGE("Invalid identifier usage"),
 	INVALID_NUMBER("Invalid number"),
 	INVALID_SUBRANGE_TYPE("Invalid subrange type"),
+	INVALID_PARM("Invalid parameter"),
 	INVALID_TYPE("Invalid type"),
 	MIN_GT_MAX("Min greater than max"),
 	MISSING_COMMA("Missing comma"),

@@ -1,11 +1,16 @@
 int factorial(int num);
-void print(int num, int fact);
+void negative();
+void printfactorial(int num, int fact);
 
 void main() {
 	int num, fact;
-	num = 8;
+	num = 5;
 	fact = factorial(num);
-	print(num, fact);
+	if (num >= 0) {
+		printfactorial(num, fact);
+	} else {
+		negative();
+	}
 }
 
 int factorial(int num) {
@@ -16,9 +21,23 @@ int factorial(int num) {
 		num = num - 1;
 	}
 	return fact;
+	writeln(999999);
 }
 
-void print(int num, int fact) {
+void negative() {
+	writeln('');
+	write('E');
+	write('r');
+	write('r');
+	write('o');
+	write('r');
+	writeln('!');
+	return;
+	writeln('!');
+}
+
+
+void printfactorial(int num, int fact) {
 	writeln('');
 	write('F');
 	write('a');

@@ -25,78 +25,89 @@ public class StatementParser extends CParserTD {
 
 	public ICodeNode parse(Token token) throws Exception {
 		ICodeNode statementNode = null;
-		switch ((CTokenType) token.getType()) {
-			case LEFT_BRACE: {
-				Compound compoundParser = new Compound(this);
-				statementNode = compoundParser.parse(token);
-				break;
-			}
-			case IDENTIFIER: {
-				String name = token.getText().toLowerCase();
-				SymTabEntry id = symTabStack.lookup(name);
-				Definition idDefn = id != null ? id.getDefinition() : UNDEFINED;
-				// assignment or procedure call
-				switch ((DefinitionImpl) idDefn) {
-					case VARIABLE:
-					case VALUE_PARM:
-					case UNDEFINED: {
-						Assignment assignmentParser = new Assignment(this);
-						statementNode = assignmentParser.parse(token);
-						break;
-					}
-					case FUNCTION: {
-						Assignment assignmentParser = new Assignment(this);
-						statementNode = assignmentParser.parseReturn(token);
-						break;
-					}
-					case PROCEDURE: {
-						CallParser callParser = new CallParser(this);
-						statementNode = callParser.parse(token);
-						break;
-					}
-					default: {
-						errorHandler.flag(token, UNEXPECTED_TOKEN, this);
-						token = nextToken(); // consume identifier
-					}
+		SymTab symTab = symTabStack.getLocalSymTab();
+		boolean hasreturned = ((SymTabImpl)symTab).returned;
+		if (!hasreturned) {
+			switch ((CTokenType) token.getType()) {
+				case LEFT_BRACE: {
+					Compound compoundParser = new Compound(this);
+					statementNode = compoundParser.parse(token);
+					break;
 				}
-				break;
+				case IDENTIFIER: {
+					String name = token.getText().toLowerCase();
+					SymTabEntry id = symTabStack.lookup(name);
+					Definition idDefn = id != null ? id.getDefinition() : UNDEFINED;
+					// assignment or procedure call
+					switch ((DefinitionImpl) idDefn) {
+						case VARIABLE:
+						case VALUE_PARM:
+						case UNDEFINED: {
+							Assignment assignmentParser = new Assignment(this);
+							statementNode = assignmentParser.parse(token);
+							break;
+						}
+						case FUNCTION: {
+							Assignment assignmentParser = new Assignment(this);
+							statementNode = assignmentParser.parseReturn(token);
+							break;
+						}
+						case PROCEDURE: {
+							CallParser callParser = new CallParser(this);
+							statementNode = callParser.parse(token);
+							break;
+						}
+						default: {
+							errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+							token = nextToken(); // consume identifier
+						}
+					}
+					break;
+				}
+				case WHILE: {
+					WhileStatementParser whileParser = new WhileStatementParser(this);
+					statementNode = whileParser.parse(token);
+					break;
+				}
+				case IF: {
+					IfStatementParser ifParser = new IfStatementParser(this);
+					statementNode = ifParser.parse(token);
+					break;
+				}
+				case RETURN: {
+					symTab = symTabStack.getLocalSymTab();
+		        	boolean isfunc = ((SymTabImpl)symTab).isfunc;
+		        	if (isfunc) {	
+		        		((SymTabImpl)symTab).returned = true;
+						Assignment assignmentParser = new Assignment(this);
+				        statementNode = assignmentParser.parseReturn(token);
+				        setLineNumber(statementNode, token);
+				        /*
+				        statementNode = ICodeFactory.createICodeNode(COMPOUND);
+				        statementNode.addChild(icodenode); 
+				        setLineNumber(statementNode, token);
+				        ICodeNode returnNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.NO_OP);
+				        setLineNumber(returnNode, token);
+				        statementNode.addChild(returnNode);		
+				        */	
+				        break;	        		
+		        	} else {
+		        		((SymTabImpl)symTab).returned = true;
+						statementNode = ICodeFactory.createICodeNode(NO_OP);
+		        		token = nextToken();
+		        	}
+					break;
+				}
+				default: {
+					statementNode = ICodeFactory.createICodeNode(NO_OP);
+					break;
+				}
 			}
-			case WHILE: {
-				WhileStatementParser whileParser = new WhileStatementParser(this);
-				statementNode = whileParser.parse(token);
-				break;
-			}
-			case IF: {
-				IfStatementParser ifParser = new IfStatementParser(this);
-				statementNode = ifParser.parse(token);
-				break;
-			}
-			case RETURN: {
-				SymTab symTab = symTabStack.getLocalSymTab();
-	        	boolean isfunc = ((SymTabImpl)symTab).isfunc;
-	        	if (isfunc) {	
-				Assignment assignmentParser = new Assignment(this);
-		        ICodeNode icodenode = assignmentParser.parseReturn(token);
-		        
-		        setLineNumber(icodenode, token);
-		        statementNode = ICodeFactory.createICodeNode(COMPOUND);
-		        statementNode.addChild(icodenode); 
-		        setLineNumber(statementNode, token);
-		        ICodeNode returnNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.NO_OP );
-		        setLineNumber(returnNode, token);
-		        statementNode.addChild(returnNode);			
-				break;	        		
-	        	}
-	        	else {
-					statementNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.RETURN);
-	        		token = nextToken();
-	        	}
-				break;
-			}
-			default: {
-				statementNode = ICodeFactory.createICodeNode(NO_OP);
-				break;
-			}
+		} else { // function has already returned, skip over everything
+			while (token.getType() != SEMICOLON)
+				token = nextToken();
+			token = nextToken();
+			statementNode = ICodeFactory.createICodeNode(NO_OP);
 		}
 		// set current line number as attribute
 		setLineNumber(statementNode, token);

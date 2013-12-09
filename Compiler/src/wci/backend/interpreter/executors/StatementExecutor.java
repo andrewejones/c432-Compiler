@@ -82,11 +82,6 @@ public class StatementExecutor extends Executor
                 CallExecutor callExecutor = new CallExecutor(this);
                 return callExecutor.execute(node);
             }
-            
-            case RETURN: {
-                ReturnExecutor returnExecutor = new ReturnExecutor(this);
-                return returnExecutor.execute(node);
-            }
 
             case NO_OP: return null;
 

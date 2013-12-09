@@ -25,6 +25,8 @@ public class CallStandardParser extends CallParser {
 		callNode.setAttribute(ID, pfId);
 		token = nextToken(); // consume identifier
 		switch ((RoutineCodeImpl) routineCode) {
+		
+		
 		case WRITE:
 		case WRITELN:
 			return parseWriteWriteln(token, callNode, pfId);

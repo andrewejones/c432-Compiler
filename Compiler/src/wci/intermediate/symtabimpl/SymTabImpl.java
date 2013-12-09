@@ -22,8 +22,9 @@ public class SymTabImpl
     private int nestingLevel;       // scope nesting level of this entry
     private int slotNumber;         // local variables array slot number
     private int maxSlotNumber;      // max slot number value
-    public String funcname = null;      // max slot number value
-    public boolean isfunc = false;      // max slot number value
+    public String funcname = null;      // function name
+    public boolean isfunc = false;      // true if a function
+    public boolean returned = false;      // true if function already returned
 
     /**
      * Constructor.
