@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
-
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
@@ -38,6 +37,8 @@ public class Predefined
     public static SymTabEntry voidId;
     public static SymTabEntry falseId;
     public static SymTabEntry trueId;
+    public static SymTabEntry readId;
+    public static SymTabEntry readlnId;
     public static SymTabEntry writeId;
     public static SymTabEntry writelnId;
 
@@ -128,6 +129,8 @@ public class Predefined
      */
     private static void initializeStandardRoutines(SymTabStack symTabStack)
     {
+        readId    = enterStandard(symTabStack, PROCEDURE, "read",    READ);
+        readlnId  = enterStandard(symTabStack, PROCEDURE, "readln",  READLN);
         writeId   = enterStandard(symTabStack, PROCEDURE, "write",   WRITE);
         writelnId = enterStandard(symTabStack, PROCEDURE, "writeln", WRITELN);
     }
