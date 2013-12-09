@@ -49,13 +49,6 @@ public class MemoryMapImpl
                 TypeSpec type = entry.getTypeSpec();
                 put(name, MemoryFactory.createCell(allocateCellValue(type)));
             }
-
-            /* VAR parameter: Allocate a single cell to hold a reference
-            //                in the hashmap.
-            else if (defn == VAR_PARM) {
-                String name = entry.getName();
-                put(name, MemoryFactory.createCell(null));
-            }*/
         }
     }
 

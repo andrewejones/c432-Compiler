@@ -112,13 +112,13 @@ public class AssignmentExecutor extends StatementExecutor
                 stringValue = buffer.toString();
             }
 
-            targetCell.setValue(copyOf(toWookie(targetType, stringValue),
+            targetCell.setValue(copyOf(toC(targetType, stringValue),
                                        node));
         }
 
         // Simple assignment.
         else {
-            targetCell.setValue(copyOf(toWookie(targetType, value), node));
+            targetCell.setValue(copyOf(toC(targetType, value), node));
         }
 
         sendAssignMessage(node, targetId.getName(), value);

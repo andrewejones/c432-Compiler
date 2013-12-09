@@ -1,7 +1,5 @@
 package wci.backend.interpreter;
 
-import java.util.ArrayList;
-
 /**
  * <h1>RuntimeStack</h1>
  *
@@ -12,11 +10,6 @@ import java.util.ArrayList;
  */
 public interface RuntimeStack
 {
-    /**
-     * @return an array list of the activation records on the stack.
-     */
-    public ArrayList<ActivationRecord> records();
-
     /**
      * Get the topmost activation record at a given nesting level.
      * @param nestingLevel the nesting level.

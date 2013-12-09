@@ -6,6 +6,7 @@ import wci.frontend.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 import wci.backend.interpreter.*;
+
 import static wci.frontend.c.CTokenType.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
@@ -204,7 +205,6 @@ public class CallStandardExecutor extends CallExecutor
         }
 
         // Integer value.
-
         if (tokenType == INT) {
             Number value = sign == MINUS ? -((Integer) token.getValue())
                            : (Integer) token.getValue();
@@ -212,8 +212,7 @@ public class CallStandardExecutor extends CallExecutor
                 ? value
                 : new Float(((Integer) value).intValue());
         }
-        
-        
+
         // Real value.
         else if (tokenType == FLOAT) {
             Number value = sign == MINUS ? -((Float) token.getValue())
@@ -286,11 +285,6 @@ public class CallStandardExecutor extends CallExecutor
                                 :                                      "s";
                 Object value = expressionExecutor.execute(exprNode);
 
-                if ((dataType == Predefined.charType) &&
-                    (value instanceof String))
-                {
-                    value = ((String) value).charAt(0);
-                }
 
                 // Java format string.
                 StringBuilder format = new StringBuilder("%");
@@ -309,7 +303,7 @@ public class CallStandardExecutor extends CallExecutor
                 format.append(typeCode);
 
                 // Write the formatted value to the standard output.
-                standardOut.printf(format.toString(), value);
+                standardOut.print(value);
                 standardOut.flush();
             }
         }

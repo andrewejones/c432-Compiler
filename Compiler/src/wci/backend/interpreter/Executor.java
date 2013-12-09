@@ -3,17 +3,26 @@ package wci.backend.interpreter;
 import java.io.*;
 
 import wci.frontend.*;
-import wci.frontend.c.CScanner;
+import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
 import wci.backend.*;
 import wci.backend.interpreter.*;
 import wci.backend.interpreter.executors.*;
 import wci.message.*;
+
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 import static wci.message.MessageType.INTERPRETER_SUMMARY;
 
+/**
+ * <h1>Executor</h1>
+ *
+ * <p>The executor for an interpreter back end.</p>
+ *
+ * <p>Copyright (c) 2009 by Ronald Mak</p>
+ * <p>For instructional purposes only.  No warranties.</p>
+ */
 public class Executor extends Backend
 {
     protected static int executionCount;
