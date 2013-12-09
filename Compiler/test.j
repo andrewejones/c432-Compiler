@@ -55,6 +55,10 @@ L002:
 	iload_1
 	istore_3
 .line 18
+.line 19
+	iconst_0
+	istore_3
+.line 19
 
 	iload_3
 	ireturn
@@ -69,63 +73,63 @@ L002:
 .var 0 is num I
 
 
-.line 22
+.line 23
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
 	ldc	"\n"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
-.line 23
+.line 24
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
 	ldc	"F"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
-.line 24
-	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	"a"
-	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 25
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	"c"
+	ldc	"a"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 26
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	"t"
+	ldc	"c"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 27
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	"o"
+	ldc	"t"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 28
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	"r"
+	ldc	"o"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 29
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	"i"
+	ldc	"r"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 30
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	"a"
+	ldc	"i"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 31
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	"l"
+	ldc	"a"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 32
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	" "
+	ldc	"l"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 33
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	"o"
+	ldc	" "
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 34
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	"f"
+	ldc	"o"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 35
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
-	ldc	" "
+	ldc	"f"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
 .line 36
+	getstatic	java/lang/System/out Ljava/io/PrintStream;
+	ldc	" "
+	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
+.line 37
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
 	ldc	"%d"
 	iconst_1
@@ -137,15 +141,15 @@ L002:
 	aastore
 	invokestatic	java/lang/String/format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
-.line 37
+.line 38
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
 	ldc	":"
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
-.line 38
+.line 39
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
 	ldc	" "
 	invokevirtual	java/io/PrintStream.print(Ljava/lang/String;)V
-.line 39
+.line 40
 	getstatic	java/lang/System/out Ljava/io/PrintStream;
 	ldc	"%d\n"
 	iconst_1
