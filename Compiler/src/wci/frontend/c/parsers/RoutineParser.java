@@ -20,7 +20,7 @@ public class RoutineParser extends DeclarationsParser {
 	}
 
 	private static int dummyCounter = 0; // counter for dummy routine names
-	private static final EnumSet<CTokenType> DATA_TYPE_SET = EnumSet.of(INT, FLOAT, CHAR);
+	private static final EnumSet<CTokenType> DATA_TYPE_SET = EnumSet.of(INTEGER, REAL, CHAR);
 	
 	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
 		Definition routineDefn = null;
@@ -139,7 +139,7 @@ public class RoutineParser extends DeclarationsParser {
 	}
 
 	// sync set for formal parameter sublist
-	private static final EnumSet<CTokenType> PARAMETER_SET = EnumSet.of(INT, FLOAT, CHAR, RIGHT_PAREN);
+	private static final EnumSet<CTokenType> PARAMETER_SET = EnumSet.of(INTEGER, REAL, CHAR, RIGHT_PAREN);
 	// sync set for (
 	private static final EnumSet<CTokenType> LEFT_PAREN_SET = EnumSet.of(LEFT_PAREN);
 

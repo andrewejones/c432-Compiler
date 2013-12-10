@@ -13,7 +13,7 @@ public class DeclarationsParser extends CParserTD {
 		super(parent);
 	}
 
-	static final EnumSet<CTokenType> TYPE_SET = EnumSet.of(INT, FLOAT, CHAR);
+	static final EnumSet<CTokenType> TYPE_SET = EnumSet.of(INTEGER, REAL, CHAR);
 
 	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
 		token = synchronize(TYPE_SET);

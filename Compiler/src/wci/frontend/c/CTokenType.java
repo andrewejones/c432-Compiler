@@ -7,7 +7,7 @@ import wci.frontend.TokenType;
 public enum CTokenType implements TokenType
 {
 	// reserved words
-	ELSE, FUNCTION, IF, PROCEDURE, PROGRAM, RETURN, CHAR, FLOAT, INT, VOID, WHILE,
+	ELSE, FUNCTION, IF, PROCEDURE, PROGRAM, RETURN, CHAR, REAL, INTEGER, VOID, WHILE,
 
 	// special symbols
 	PLUS("+"), MINUS("-"), STAR("*"), SLASH("/"), MOD("%"),

@@ -6,7 +6,6 @@ import wci.frontend.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 import wci.backend.interpreter.*;
-
 import static wci.frontend.c.CTokenType.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
@@ -62,6 +61,32 @@ public class CallStandardExecutor extends CallExecutor
 
             case WRITE:
             case WRITELN: return executeWriteWriteln(node, routineCode);
+
+            case EOF:
+            case EOLN:    return executeEofEoln(node, routineCode);
+
+            case ABS:
+            case SQR:     return executeAbsSqr(node, routineCode, actualNode);
+
+            case ARCTAN:
+            case COS:
+            case EXP:
+            case LN:
+            case SIN:
+            case SQRT:    return executeArctanCosExpLnSinSqrt(node, routineCode,
+                                                              actualNode);
+
+            case PRED:
+            case SUCC:    return executePredSucc(node, routineCode,
+                                                 actualNode, type);
+
+            case CHR:     return executeChr(node, routineCode, actualNode);
+            case ODD:     return executeOdd(node, routineCode, actualNode);
+            case ORD:     return executeOrd(node, routineCode, actualNode);
+
+            case ROUND:
+            case TRUNC:   return executeRoundTrunc(node, routineCode,
+                                                   actualNode);
 
             default:      return null;  // should never get here
         }
@@ -179,7 +204,7 @@ public class CallStandardExecutor extends CallExecutor
         }
 
         // Integer value.
-        if (tokenType == INT) {
+        if (tokenType == INTEGER) {
             Number value = sign == MINUS ? -((Integer) token.getValue())
                            : (Integer) token.getValue();
             return type == Predefined.integerType
@@ -188,7 +213,7 @@ public class CallStandardExecutor extends CallExecutor
         }
 
         // Real value.
-        else if (tokenType == FLOAT) {
+        else if (tokenType == REAL) {
             Number value = sign == MINUS ? -((Float) token.getValue())
                            : (Float) token.getValue();
             return type == Predefined.realType
@@ -296,4 +321,191 @@ public class CallStandardExecutor extends CallExecutor
         return null;
     }
 
+    /**
+     * Execute a call to eof or eoln.
+     * @param callNode the CALL node.
+     * @param routineCode the routine code.
+     * @return true or false.
+     */
+    private Boolean executeEofEoln(ICodeNode callNode, RoutineCode routineCode)
+    {
+        try {
+            if (routineCode == EOF) {
+                return standardIn.atEof();
+            }
+            else {
+                return standardIn.atEol();
+            }
+        }
+        catch (Exception ex) {
+            errorHandler.flag(callNode, INVALID_INPUT,
+                              CallStandardExecutor.this);
+            return true;
+        }
+    }
+
+    /**
+     * Execute a call to abs or sqr.
+     * @param callNode the CALL node.
+     * @param routineCode the routine code.
+     * @param actualNode the actual parameter node.
+     * @return the function value.
+     */
+    private Number executeAbsSqr(ICodeNode callNode, RoutineCode routineCode,
+                                 ICodeNode actualNode)
+    {
+        Object argValue = expressionExecutor.execute(actualNode);
+
+        if (argValue instanceof Integer) {
+            int value = (Integer) argValue;
+            return routineCode == ABS ? Math.abs(value) : value*value;
+        }
+        else {
+            float value = (Float) argValue;
+            return routineCode == ABS ? Math.abs(value) : value*value;
+        }
+    }
+
+    /**
+     * Execute a call to arctan, cos, exp, ln, sin, or sqrt.
+     * @param callNode the CALL node.
+     * @param routineCode the routine code.
+     * @param actualNode the actual parameter node.
+     * @return the function value.
+     */
+    private Float executeArctanCosExpLnSinSqrt(ICodeNode callNode,
+                                               RoutineCode routineCode,
+                                               ICodeNode actualNode)
+    {
+        Object argValue = expressionExecutor.execute(actualNode);
+        Float value = argValue instanceof Integer ? (Integer) argValue
+                                                  : (Float) argValue;
+
+        switch ((RoutineCodeImpl) routineCode) {
+            case ARCTAN: return (float) Math.atan(value);
+            case COS:    return (float) Math.cos(value);
+            case EXP:    return (float) Math.exp(value);
+            case SIN:    return (float) Math.sin(value);
+
+            case LN: {
+                if (value > 0.0f) {
+                    return (float) Math.log(value);
+                }
+                else {
+                    errorHandler.flag(callNode,
+                                      INVALID_STANDARD_FUNCTION_ARGUMENT,
+                                      CallStandardExecutor.this);
+                    return 0.0f;
+                }
+            }
+
+            case SQRT: {
+                if (value >= 0.0f) {
+                    return (float) Math.sqrt(value);
+                }
+                else {
+                    errorHandler.flag(callNode,
+                                      INVALID_STANDARD_FUNCTION_ARGUMENT,
+                                      CallStandardExecutor.this);
+                    return 0.0f;
+                }
+            }
+
+            default: return 0.0f;  // should never get here
+        }
+    }
+
+    /**
+     * Execute a call to pred or succ.
+     * @param callNode the CALL node.
+     * @param routineCode the routine code.
+     * @param actualNode the actual parameter node.
+     * @param type the value type.
+     * @return the function value.
+     */
+    private Integer executePredSucc(ICodeNode callNode, RoutineCode routineCode,
+                                    ICodeNode actualNode, TypeSpec type)
+    {
+        int value = (Integer) expressionExecutor.execute(actualNode);
+        int newValue = routineCode == PRED ? --value : ++value;
+
+        newValue = (Integer) checkRange(callNode, type, newValue);
+        return newValue;
+    }
+
+    /**
+     * Execute a call to chr.
+     * @param callNode the CALL node.
+     * @param routineCode the routine code.
+     * @param actualNode the actual parameter node.
+     * @return the function value.
+     */
+    private Character executeChr(ICodeNode callNode, RoutineCode routineCode,
+                                 ICodeNode actualNode)
+    {
+        int value = (Integer) expressionExecutor.execute(actualNode);
+        char ch = (char) value;
+        return ch;
+    }
+
+    /**
+     * Execute a call to odd.
+     * @param callNode the CALL node.
+     * @param routineCode the routine code.
+     * @param actualNode the actual parameter node.
+     * @return true or false.
+     */
+    private Boolean executeOdd(ICodeNode callNode, RoutineCode routineCode,
+                               ICodeNode actualNode)
+    {
+        int value = (Integer) expressionExecutor.execute(actualNode);
+        return (value & 1) == 1;
+    }
+
+    /**
+     * Execute a call to ord.
+     * @param callNode the CALL node.
+     * @param routineCode the routine code.
+     * @param actualNode the actual parameter node.
+     * @return the function value.
+     */
+    private Integer executeOrd(ICodeNode callNode, RoutineCode routineCode,
+                               ICodeNode actualNode)
+    {
+        Object value = expressionExecutor.execute(actualNode);
+
+        if (value instanceof Character) {
+            char ch = ((Character) value).charValue();
+            return (int) ch;
+        }
+        else if (value instanceof String) {
+            char ch = ((String) value).charAt(0);
+            return (int) ch;
+        }
+        else {
+            return (Integer) value;
+        }
+    }
+
+    /**
+     * Execute a call to round or trunc.
+     * @param callNode the CALL node.
+     * @param routineCode the routine code.
+     * @param actualNode the actual parameter node.
+     * @return the function value.
+     */
+    private Integer executeRoundTrunc(ICodeNode callNode,
+                                      RoutineCode routineCode,
+                                      ICodeNode actualNode)
+    {
+        float value = (Float) expressionExecutor.execute(actualNode);
+
+        if (routineCode == ROUND) {
+            return value >= 0.0f ? (int) (value + 0.5f)
+                                 : (int) (value - 0.5f);
+        }
+        else {
+            return (int) value;
+        }
+    }
 }

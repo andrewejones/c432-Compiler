@@ -22,7 +22,7 @@ public class ExpressionParser extends StatementParser {
 	}
 
 	// sync set for starting expression
-	static final EnumSet<CTokenType> EXPR_START_SET = EnumSet.of(PLUS, MINUS, IDENTIFIER, INT, FLOAT, CHAR, CTokenType.NOT, LEFT_PAREN);
+	static final EnumSet<CTokenType> EXPR_START_SET = EnumSet.of(PLUS, MINUS, IDENTIFIER, INTEGER, REAL, CHAR, CTokenType.NOT, LEFT_PAREN);
 
 	public ICodeNode parse(Token token) throws Exception {
 		return parseExpression(token);
@@ -350,7 +350,7 @@ public class ExpressionParser extends StatementParser {
 			return parseIdentifier(token);
 		}
 
-		case INT: {
+		case INTEGER: {
 			// Create an INTEGER_CONSTANT node as the root node.
 			rootNode = ICodeFactory.createICodeNode(INTEGER_CONSTANT);
 			rootNode.setAttribute(VALUE, token.getValue());
@@ -361,7 +361,7 @@ public class ExpressionParser extends StatementParser {
 			break;
 		}
 
-		case FLOAT: {
+		case REAL: {
 			// Create an REAL_CONSTANT node as the root node.
 			rootNode = ICodeFactory.createICodeNode(REAL_CONSTANT);
 			rootNode.setAttribute(VALUE, token.getValue());

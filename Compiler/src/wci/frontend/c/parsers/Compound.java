@@ -17,7 +17,7 @@ public class Compound extends StatementParser {
 	}
 
 	// sync sets for var declaration
-	private static final EnumSet<CTokenType> VAR_SET = EnumSet.of(INT, FLOAT, CHAR);
+	private static final EnumSet<CTokenType> VAR_SET = EnumSet.of(INTEGER, REAL, CHAR);
 
 	public ICodeNode parse(Token token) throws Exception {
 		token = nextToken(); // consume {

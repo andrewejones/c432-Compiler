@@ -23,7 +23,7 @@ public class ProgramParser extends DeclarationsParser {
 	}
 
 	// sync set
-	static final EnumSet<CTokenType> ROUTINE_SET = EnumSet.of(VOID, INT, CHAR, FLOAT);
+	static final EnumSet<CTokenType> ROUTINE_SET = EnumSet.of(VOID, INTEGER, CHAR, REAL);
 
 	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
 		// create dummy program named test

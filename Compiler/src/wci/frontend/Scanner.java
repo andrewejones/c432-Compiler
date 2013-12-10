@@ -82,7 +82,7 @@ public abstract class Scanner
     public char peekChar()
         throws Exception
     {
-        return source.nextChar();
+        return source.peekChar();
     }
 
     /**

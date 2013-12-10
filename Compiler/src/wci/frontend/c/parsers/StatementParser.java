@@ -110,7 +110,7 @@ public class StatementParser extends CParserTD {
 			node.setAttribute(LINE, token.getLineNumber());
 	}
 
-	protected static final EnumSet<CTokenType> DATA_TYPES = EnumSet.of(INT, FLOAT, CHAR);
+	protected static final EnumSet<CTokenType> DATA_TYPES = EnumSet.of(INTEGER, REAL, CHAR);
 	
 	protected void parseList(Token token, ICodeNode parentNode, CTokenType terminator, CErrorCode errorCode) throws Exception {
 		// sync set for terminator

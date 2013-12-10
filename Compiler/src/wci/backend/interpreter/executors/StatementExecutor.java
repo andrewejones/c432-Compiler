@@ -93,18 +93,18 @@ public class StatementExecutor extends Executor
     }
 
     /**
-     * Convert a Java string to a C string or character.
+     * Convert a Java string to a Pascal string or character.
      * @param targetType the target type specification.
      * @param javaValue the Java string.
-     * @return the C string or character.
+     * @return the Pascal string or character.
      */
-    protected Object toC(TypeSpec targetType, Object javaValue)
+    protected Object toPascal(TypeSpec targetType, Object javaValue)
     {
         if (javaValue instanceof String) {
             String string = (String) javaValue;
 
             if (targetType == Predefined.charType) {
-                return string.charAt(0);  // C character
+                return string.charAt(0);  // Pascal character
             }
             else if (targetType.isPascalString()) {
                 Cell charCells[] = new Cell[string.length()];
@@ -114,7 +114,7 @@ public class StatementExecutor extends Executor
                     charCells[i] = MemoryFactory.createCell(string.charAt(i));
                 }
 
-                return charCells;  // C string (array of characters)
+                return charCells;  // Pascal string (array of characters)
             }
             else {
                 return javaValue;
@@ -126,9 +126,9 @@ public class StatementExecutor extends Executor
     }
 
     /**
-     * Convert a C string to a Java string.
+     * Convert a Pascal string to a Java string.
      * @param targetType the target type specification
-     * @param pascalValue the C string.
+     * @param pascalValue the Pascal string.
      * @return the Java string.
      */
     protected Object toJava(TypeSpec targetType, Object pascalValue)
@@ -152,7 +152,7 @@ public class StatementExecutor extends Executor
     }
 
     /**
-     * Return a copy of a C value.
+     * Return a copy of a Pascal value.
      * @param value the value.
      * @param node the statement node.
      * @return the copy.
@@ -187,7 +187,7 @@ public class StatementExecutor extends Executor
     }
 
     /**
-     * Return a copy of a C record.
+     * Return a copy of a Pascal record.
      * @param value the record value hashmap.
      * @param node the statement node.
      * @return the copy of the hashmap.
@@ -217,7 +217,7 @@ public class StatementExecutor extends Executor
     }
 
     /**
-     * Return a copy of a C array.
+     * Return a copy of a Pascal array.
      * @param valueCells the array cells.
      * @param node the statement node.
      * @return the copy of the array cells.

@@ -19,7 +19,7 @@ public class Assignment extends StatementParser {
 	}
 
 	// sync set for =
-	private static final EnumSet<CTokenType> EQUALS_SET = EnumSet.of(PLUS, MINUS, IDENTIFIER, INT, FLOAT, CHAR, CTokenType.NOT, LEFT_PAREN, SINGLE_EQUALS, SEMICOLON, RIGHT_BRACE, ELSE);
+	private static final EnumSet<CTokenType> EQUALS_SET = EnumSet.of(PLUS, MINUS, IDENTIFIER, INTEGER, REAL, CHAR, CTokenType.NOT, LEFT_PAREN, SINGLE_EQUALS, SEMICOLON, RIGHT_BRACE, ELSE);
 
 	public ICodeNode parse(Token token) throws Exception {
 		ICodeNode assignNode = ICodeFactory.createICodeNode(ASSIGN); // create assign node

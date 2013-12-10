@@ -39,7 +39,7 @@ public class ConstantDefinitionsParser extends DeclarationsParser
     private static final EnumSet<CTokenType> IDENTIFIER_SET = EnumSet.of(IDENTIFIER, LEFT_BRACE);
 
     // Synchronization set for starting a constant.
-    static final EnumSet<CTokenType> CONSTANT_START_SET = EnumSet.of(IDENTIFIER, INT, FLOAT, PLUS, MINUS, CHAR, SEMICOLON);
+    static final EnumSet<CTokenType> CONSTANT_START_SET = EnumSet.of(IDENTIFIER, INTEGER, REAL, PLUS, MINUS, CHAR, SEMICOLON);
 
     // Synchronization set for the = token.
     private static final EnumSet<CTokenType> EQUALS_SET = EnumSet.of(SINGLE_EQUALS, SEMICOLON, IDENTIFIER, LEFT_BRACE);
@@ -154,13 +154,13 @@ public class ConstantDefinitionsParser extends DeclarationsParser
                 return parseIdentifierConstant(token, sign);
             }
 
-            case INT: {
+            case INTEGER: {
                 Integer value = (Integer) token.getValue();
                 nextToken();  // consume the number
                 return sign == MINUS ? -value : value;
             }
 
-            case FLOAT: {
+            case REAL: {
                 Float value = (Float) token.getValue();
                 nextToken();  // consume the number
                 return sign == MINUS ? -value : value;

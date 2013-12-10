@@ -26,7 +26,6 @@ public class StatementGenerator extends CodeGenerator
      * Constructor.
      * @param the parent executor.
      */
-	
     public StatementGenerator(CodeGenerator parent)
     {
         super(parent);
@@ -106,7 +105,7 @@ public class StatementGenerator extends CodeGenerator
     private int getLineNumber(ICodeNode node)
     {
         Object lineNumber = null;
-  
+
         // Go up the parent links to look for a line number.
         while ((node != null) &&
                ((lineNumber = node.getAttribute(ICodeKeyImpl.LINE)) == null)) {
@@ -115,5 +114,4 @@ public class StatementGenerator extends CodeGenerator
 
         return (Integer) lineNumber;
     }
-    
 }

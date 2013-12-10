@@ -27,14 +27,6 @@ public class RuntimeStackImpl
     }
 
     /**
-     * @return an array list of the activation records on the stack.
-     */
-    public ArrayList<ActivationRecord> records()
-    {
-        return this;
-    }
-
-    /**
      * Get the topmost activation record at a given nesting level.
      * @param nestingLevel the nesting level.
      * @return the activation record.

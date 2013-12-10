@@ -1,16 +1,12 @@
 package wci.backend.interpreter;
 
 import java.io.*;
-
 import wci.frontend.*;
-import wci.frontend.c.*;
+import wci.frontend.c.CScanner;
 import wci.intermediate.*;
-import wci.intermediate.icodeimpl.*;
 import wci.backend.*;
-import wci.backend.interpreter.*;
 import wci.backend.interpreter.executors.*;
 import wci.message.*;
-
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 import static wci.message.MessageType.INTERPRETER_SUMMARY;

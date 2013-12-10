@@ -1,5 +1,7 @@
 package wci.frontend.c.tokens;
 
+import java.util.HashMap;
+
 import wci.frontend.*;
 import wci.frontend.c.*;
 import static wci.frontend.c.CTokenType.*;
@@ -24,7 +26,14 @@ public class CWordToken extends CToken
     {
         super(source);
     }
-
+    
+ // map for predefined lookup
+ 	private static HashMap<String, String> typemap = new HashMap<String, String>();
+ 	static {
+ 		typemap.put("int", "integer");
+ 		typemap.put("float", "real");
+ 	}
+ 	
     /**
      * Extract a C word token from the source.
      * @throws Exception if an error occurred.
@@ -43,11 +52,11 @@ public class CWordToken extends CToken
         }
 
         text = textBuffer.toString();
-
-        // Is it a reserved word or an identifier?
-        type = (RESERVED_WORDS.contains(text.toLowerCase()))
-               ? CTokenType.valueOf(text.toUpperCase())  // reserved word
-               : IDENTIFIER;                                  // identifier
-               
+        
+        if (typemap.containsKey(text) && RESERVED_WORDS.contains(typemap.get(text).toLowerCase()))
+	        type = CTokenType.valueOf(typemap.get(text).toUpperCase());
+        else
+	        type = (RESERVED_WORDS.contains(text.toLowerCase())) ? CTokenType.valueOf(text.toUpperCase()) : IDENTIFIER;
+        
     }
 }

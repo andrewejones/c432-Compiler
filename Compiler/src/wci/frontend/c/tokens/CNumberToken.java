@@ -51,7 +51,7 @@ public class CNumberToken extends CToken
         String fractionDigits = null;  // digits after the decimal point
         char currentChar;              // current character
 
-        type = INT;  // assume INTEGER token type for now
+        type = INTEGER;  // assume INTEGER token type for now
 
         // Extract the digits of the whole part of the number.
         wholeDigits = unsignedIntegerDigits(textBuffer);
@@ -62,7 +62,7 @@ public class CNumberToken extends CToken
         // Is there a . ?
         currentChar = currentChar();
         if (currentChar == '.') {
-            type = FLOAT;  // decimal point, so token type is REAL
+            type = REAL;  // decimal point, so token type is REAL
             textBuffer.append(currentChar);
             currentChar = nextChar();  // consume decimal point
 
@@ -76,7 +76,7 @@ public class CNumberToken extends CToken
         currentChar = currentChar();
 
         // Compute the value of an integer number token.
-        if (type == INT) {
+        if (type == INTEGER) {
             int integerValue = computeIntegerValue(wholeDigits);
 
             if (type != ERROR) {
@@ -85,7 +85,7 @@ public class CNumberToken extends CToken
         }
 
         // Compute the value of a real number token.
-        else if (type == FLOAT) {
+        else if (type == REAL) {
             float floatValue = computeFloatValue(wholeDigits, fractionDigits);
             if (type != ERROR) {
                 value = new Float(floatValue);

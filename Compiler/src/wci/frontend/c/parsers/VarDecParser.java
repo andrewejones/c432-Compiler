@@ -32,7 +32,7 @@ public class VarDecParser extends DeclarationsParser {
 	// synch set for start of next definition or declaration
 	static final EnumSet<CTokenType> NEXT_START_SET = EnumSet.of(IDENTIFIER, SEMICOLON);
 	// data types
-	private static final EnumSet<CTokenType> DATA_TYPE_SET = EnumSet.of(INT, FLOAT, CHAR);
+	private static final EnumSet<CTokenType> DATA_TYPE_SET = EnumSet.of(INTEGER, REAL, CHAR);
 
 	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
 		while (DATA_TYPE_SET.contains(token.getType())) {
@@ -102,8 +102,8 @@ public class VarDecParser extends DeclarationsParser {
 // map for predefined lookup
 	private static HashMap<CTokenType, String> typemap = new HashMap<CTokenType, String>();
 	static {
-		typemap.put(INT, "integer");
-		typemap.put(FLOAT, "real");
+		typemap.put(INTEGER, "integer");
+		typemap.put(REAL, "real");
 		typemap.put(CHAR, "char");
 	}
 	
