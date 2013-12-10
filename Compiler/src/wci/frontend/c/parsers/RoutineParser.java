@@ -6,6 +6,7 @@ import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
+import wci.intermediate.c.symtabimpl.*;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -63,9 +64,9 @@ public class RoutineParser extends DeclarationsParser {
 		else {
 			SymTab symtab = symTabStack.push();
 			routineId.setAttribute(ROUTINE_SYMTAB, symtab);
-			((SymTabImpl)symtab).setFunctionName(name);
+			((SymTabImplC)symtab).setFunctionName(name);
 			if (routineDefn == DefinitionImpl.FUNCTION)
-				((SymTabImpl)symtab).setIsFunction(true);
+				((SymTabImplC)symtab).setIsFunction(true);
 		}
 		// non forwarded procedure, add to parents list of routines
 		if (routineId.getAttribute(ROUTINE_CODE) != FORWARD) {

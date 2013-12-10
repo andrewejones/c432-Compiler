@@ -1,6 +1,7 @@
 package wci.intermediate;
 
 import wci.intermediate.symtabimpl.*;
+import wci.intermediate.c.symtabimpl.*;
 
 /**
  * <h1>SymTabFactory</h1>
@@ -28,7 +29,7 @@ public class SymTabFactory
      */
     public static SymTab createSymTab(int nestingLevel)
     {
-        return new SymTabImpl(nestingLevel);
+        return new SymTabImplC(nestingLevel);
     }
 
     /**

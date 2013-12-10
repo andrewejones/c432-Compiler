@@ -1,10 +1,12 @@
 package wci.frontend.c.parsers;
 
 import java.util.EnumSet;
+
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
+import wci.intermediate.c.symtabimpl.*;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
@@ -25,7 +27,7 @@ public class StatementParser extends CParserTD {
 	public ICodeNode parse(Token token) throws Exception {
 		ICodeNode statementNode = null;
 		SymTab symTab = symTabStack.getLocalSymTab();
-		boolean hasreturned = ((SymTabImpl)symTab).getReturnSeen();
+		boolean hasreturned = ((SymTabImplC)symTab).getReturnSeen();
 		if (!hasreturned) {
 			switch ((CTokenType) token.getType()) {
 				case LEFT_BRACE: {
@@ -75,7 +77,7 @@ public class StatementParser extends CParserTD {
 				}
 				case RETURN: {
 					symTab = symTabStack.getLocalSymTab();
-		        	boolean isfunc = ((SymTabImpl)symTab).getIsFunction();
+		        	boolean isfunc = ((SymTabImplC)symTab).getIsFunction();
 		        	if (isfunc) {
 						Assignment assignmentParser = new Assignment(this);
 				        statementNode = assignmentParser.parseReturn(token);
@@ -84,7 +86,7 @@ public class StatementParser extends CParserTD {
 						statementNode = ICodeFactory.createICodeNode(NO_OP);
 		        		token = nextToken();
 		        	}
-	        		((SymTabImpl)symTab).setReturnSeen(true);
+	        		((SymTabImplC)symTab).setReturnSeen(true);
 					break;
 				}
 				default: {

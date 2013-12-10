@@ -1,12 +1,11 @@
 package wci.frontend.c.parsers;
 
 import java.util.EnumSet;
-
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
-import wci.intermediate.typeimpl.*;
+import wci.intermediate.c.symtabimpl.*;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.icodeimpl.ICodeKeyImpl.ID;
@@ -29,7 +28,7 @@ public class Assignment extends StatementParser {
 		String targetname = token.getText();
 		if (targetname.equals("return") || isReturn) {
 			SymTab symtab = symTabStack.getLocalSymTab();
-			targetname = ((SymTabImpl)symtab).getFunctionName();
+			targetname = ((SymTabImplC)symtab).getFunctionName();
 			if (targetname == null)
 				targetname = "unknownfunction";
 		}
