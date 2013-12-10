@@ -47,10 +47,15 @@ public class ProgramParser extends DeclarationsParser {
 		
 		// parse routines
         RoutineParser routineParser = new RoutineParser(this);
-        do {
+        
+        // THIS LOOP NEEDS TO BE CHANGED!!!
+        while (token.getText().compareTo("void") == 0 || token.getText().compareTo("int") == 0 || token.getText().compareTo("float") == 0 || token.getText().compareTo("char") == 0) {
         	routineParser.parse(token, routineId);
         	token = currentToken();
-        } while(token.getText().compareTo("void") == 0 || token.getText().compareTo("int") == 0 || token.getText().compareTo("float") == 0 || token.getText().compareTo("char") == 0);
+        }
+        
+        if (token.getType() == IDENTIFIER) // error on anything but void/int/main
+        	errorHandler.flag(token, UNEXPECTED_TOKEN, this);
         
 		// check if main() exists
         SymTabEntry mainId = symTabStack.lookupLocal("main");
