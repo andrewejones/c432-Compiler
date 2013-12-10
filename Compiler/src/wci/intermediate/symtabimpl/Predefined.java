@@ -87,13 +87,6 @@ public class Predefined
         charId.setDefinition(DefinitionImpl.TYPE);
         charId.setTypeSpec(charType);
 
-        // Type void.
-        voidId = symTabStack.enterLocal("void");
-        voidType = TypeFactory.createType(SCALAR);
-        voidType.setIdentifier(voidId);
-        voidId.setDefinition(DefinitionImpl.TYPE);
-        voidId.setTypeSpec(voidType);
-
         // Undefined type.
         undefinedType = TypeFactory.createType(SCALAR);
     }

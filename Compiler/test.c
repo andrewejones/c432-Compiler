@@ -10,10 +10,10 @@ int factorial(int num) {
 		num = num - 1;
 	}
 	return fact;
-	writeln(999999);
+	writeln("Should never get here...");
 }
 
-void main() {
+int main() {
 	int num, fact;
 	num = 7;
 	fact = factorial(num);
@@ -24,7 +24,7 @@ void main() {
 }
 
 void negativeerror() {
-	write("Error: negative numbers don't have factorials.");
+	write("Error: only non-negative numbers allowed.");
 }
 
 void printfactorial(int num, int fact) {

@@ -57,9 +57,7 @@ public class ProgramParser extends DeclarationsParser {
 		else { // call main()
 			ICodeNode callNode = ICodeFactory.createICodeNode(CALL);
 			callNode.setAttribute(ID, mainId);
-			// force main as void
 			callNode.setAttribute(LINE, mainId.getLineNumbers().get(0).intValue());
-			callNode.setTypeSpec(symTabStack.lookup("void").getTypeSpec());
 			iCode.setRoot(callNode);
 		}
 		

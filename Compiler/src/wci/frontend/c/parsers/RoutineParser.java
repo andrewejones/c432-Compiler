@@ -36,8 +36,13 @@ public class RoutineParser extends DeclarationsParser {
 			VarDecParser varDecParser = new VarDecParser(this);
 			type = varDecParser.parseTypeSpec(token);
 			token = currentToken();
-			routineDefn = DefinitionImpl.FUNCTION;
-			dummyName = "DummyFunctionName_".toLowerCase() + String.format("%03d", ++dummyCounter);
+			if (token.getText().toLowerCase().equals("main")) { // force main to be void
+				routineDefn = DefinitionImpl.PROCEDURE;
+				dummyName = "DummyProcedureName_".toLowerCase() + String.format("%03d", ++dummyCounter);
+			} else {
+				routineDefn = DefinitionImpl.FUNCTION;
+				dummyName = "DummyFunctionName_".toLowerCase() + String.format("%03d", ++dummyCounter);
+			}
 		} else {
 			errorHandler.flag(token, UNEXPECTED_TOKEN, this);
 			return null;
@@ -64,6 +69,7 @@ public class RoutineParser extends DeclarationsParser {
 		}
 		// non forwarded procedure, add to parents list of routines
 		if (routineId.getAttribute(ROUTINE_CODE) != FORWARD) {
+			@SuppressWarnings("unchecked")
 			ArrayList<SymTabEntry> subroutines = (ArrayList<SymTabEntry>) parentId.getAttribute(ROUTINE_ROUTINES);
 			subroutines.add(routineId);
 		}
