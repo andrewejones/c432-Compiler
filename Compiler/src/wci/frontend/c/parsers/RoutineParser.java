@@ -153,7 +153,11 @@ public class RoutineParser extends DeclarationsParser {
 			TokenType tokenType = token.getType();
 			// loops to parse sublists of formal parameter declarations
 			while (DATA_TYPE_SET.contains(tokenType)) {
-				parms.addAll(parseParmSublist(token, routineId));
+				if (routineId.getName().equals("main")) // skip main() parameters
+					while(token.getType() != RIGHT_PAREN)
+						token = nextToken();
+				else
+					parms.addAll(parseParmSublist(token, routineId));
 				token = currentToken();
 				tokenType = token.getType();
 			}

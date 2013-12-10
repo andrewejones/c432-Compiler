@@ -10,7 +10,7 @@ int factorial(int num) {
 		num = num - 1;
 	}
 	return fact;
-	writeln("Should never get here...");
+	writeln("Will never get here.");
 }
 
 int main() {
@@ -28,8 +28,5 @@ void negativeerror() {
 }
 
 void printfactorial(int num, int fact) {
-	write("Factorial of ");
-	write(num);
-	write(": ");
-	write(fact);
+	write("Factorial of ", num, ": ", fact);
 }
