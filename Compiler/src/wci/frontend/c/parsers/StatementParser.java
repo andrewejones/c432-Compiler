@@ -26,7 +26,7 @@ public class StatementParser extends CParserTD {
 	public ICodeNode parse(Token token) throws Exception {
 		ICodeNode statementNode = null;
 		SymTab symTab = symTabStack.getLocalSymTab();
-		boolean hasreturned = ((SymTabImpl)symTab).returned;
+		boolean hasreturned = ((SymTabImpl)symTab).getReturned();
 		if (!hasreturned) {
 			switch ((CTokenType) token.getType()) {
 				case LEFT_BRACE: {
@@ -76,26 +76,16 @@ public class StatementParser extends CParserTD {
 				}
 				case RETURN: {
 					symTab = symTabStack.getLocalSymTab();
-		        	boolean isfunc = ((SymTabImpl)symTab).isfunc;
-		        	if (isfunc) {	
-		        		((SymTabImpl)symTab).returned = true;
+		        	boolean isfunc = ((SymTabImpl)symTab).getIsFunc();
+		        	if (isfunc) {
 						Assignment assignmentParser = new Assignment(this);
 				        statementNode = assignmentParser.parseReturn(token);
 				        setLineNumber(statementNode, token);
-				        /*
-				        statementNode = ICodeFactory.createICodeNode(COMPOUND);
-				        statementNode.addChild(icodenode); 
-				        setLineNumber(statementNode, token);
-				        ICodeNode returnNode = ICodeFactory.createICodeNode(ICodeNodeTypeImpl.NO_OP);
-				        setLineNumber(returnNode, token);
-				        statementNode.addChild(returnNode);		
-				        */	
-				        break;	        		
 		        	} else {
-		        		((SymTabImpl)symTab).returned = true;
 						statementNode = ICodeFactory.createICodeNode(NO_OP);
 		        		token = nextToken();
 		        	}
+	        		((SymTabImpl)symTab).setReturned(true);
 					break;
 				}
 				default: {
@@ -133,6 +123,8 @@ public class StatementParser extends CParserTD {
 			// look for semicolon between statements
 			if (token.getType() == SEMICOLON)
 				token = nextToken(); // consume ;
+			//else
+			//	errorHandler.flag(token, MISSING_SEMICOLON, this);
 		}
 		// look for terminator
 		if (token.getType() == terminator)

@@ -2,7 +2,7 @@ package wci.frontend.c.parsers;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-
+import java.util.HashMap;
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
@@ -31,9 +31,11 @@ public class VarDecParser extends DeclarationsParser {
 	private static final EnumSet<CTokenType> COMMA_SET = EnumSet.of(COMMA, IDENTIFIER, SEMICOLON);
 	// synch set for start of next definition or declaration
 	static final EnumSet<CTokenType> NEXT_START_SET = EnumSet.of(IDENTIFIER, SEMICOLON);
+	// data types
+	private static final EnumSet<CTokenType> DATA_TYPE_SET = EnumSet.of(INT, FLOAT, CHAR);
 
 	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
-		while (token.getText().compareTo("int") == 0 || token.getText().compareTo("float") == 0 || token.getText().compareTo("char") == 0) {
+		while (DATA_TYPE_SET.contains(token.getType())) {
 			// parse identifier sublist and type spec
 			parseIdentifierSublist(token, IDENTIFIER_FOLLOW_SET, COMMA_SET);
 			token = currentToken();
@@ -96,9 +98,17 @@ public class VarDecParser extends DeclarationsParser {
 			errorHandler.flag(token, MISSING_IDENTIFIER, this);
 		return id;
 	}
-
+	
+// map for predefined lookup
+	private static HashMap<CTokenType, String> typemap = new HashMap<CTokenType, String>();
+	static {
+		typemap.put(INT, "integer");
+		typemap.put(FLOAT, "real");
+		typemap.put(CHAR, "char");
+	}
+	
 	protected TypeSpec parseTypeSpec(Token token) throws Exception {
-		SymTabEntry id = symTabStack.lookup(token.getText().toLowerCase());
+		SymTabEntry id = symTabStack.lookup(typemap.get(token.getType()).toLowerCase());
 		id.appendLineNumber(token.getLineNumber());
 		token = nextToken(); // consume the identifier
 		return id.getTypeSpec();

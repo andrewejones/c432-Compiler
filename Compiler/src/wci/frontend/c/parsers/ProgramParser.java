@@ -26,36 +26,29 @@ public class ProgramParser extends DeclarationsParser {
 	static final EnumSet<CTokenType> ROUTINE_SET = EnumSet.of(VOID, INT, CHAR, FLOAT);
 
 	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
-		
 		// create dummy program named test
 		SymTabEntry routineId = symTabStack.enterLocal("test");
 		routineId.setDefinition(DefinitionImpl.PROGRAM);
-
 		// create intermediate code for calling main()
 		ICode iCode = ICodeFactory.createICode();
 		routineId.setAttribute(ROUTINE_ICODE, iCode);
 		routineId.setAttribute(ROUTINE_ROUTINES, new ArrayList<SymTabEntry>());
-
 		// push symbol table onto stack
 		routineId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
-
 		// set program identifier in symbol table stack
 		symTabStack.setProgramId(routineId);
-		
 		// bump variable slot number to 1
 		symTabStack.getLocalSymTab().nextSlotNumber();
-		
 		// parse routines
         RoutineParser routineParser = new RoutineParser(this);
-        
-        // THIS LOOP NEEDS TO BE CHANGED!!!
-        while (token.getText().compareTo("void") == 0 || token.getText().compareTo("int") == 0 || token.getText().compareTo("float") == 0 || token.getText().compareTo("char") == 0) {
+        // loop through and parse all routines
+        while (ROUTINE_SET.contains(token.getType())) {
         	routineParser.parse(token, routineId);
         	token = currentToken();
+        	if (token.getType() != null && !ROUTINE_SET.contains(token.getType())) {
+        		token = synchronize(ROUTINE_SET);
+        	}
         }
-        
-        if (token.getType() == IDENTIFIER) // error on anything but void/int/main
-        	errorHandler.flag(token, UNEXPECTED_TOKEN, this);
         
 		// check if main() exists
         SymTabEntry mainId = symTabStack.lookupLocal("main");

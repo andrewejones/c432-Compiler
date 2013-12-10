@@ -2,12 +2,10 @@ package wci.frontend.c.parsers;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
-import wci.intermediate.typeimpl.*;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -21,26 +19,29 @@ public class RoutineParser extends DeclarationsParser {
 	}
 
 	private static int dummyCounter = 0; // counter for dummy routine names
-
+	private static final EnumSet<CTokenType> DATA_TYPE_SET = EnumSet.of(INT, FLOAT, CHAR);
+	
 	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
 		Definition routineDefn = null;
 		String dummyName = null;
 		SymTabEntry routineId = null;
 		TokenType routineType = token.getType();
 		TypeSpec type = null;
-		if (token.getText().compareTo("void") == 0) {
+		if (routineType == VOID) {
 			token = nextToken(); // consume void
 			routineDefn = DefinitionImpl.PROCEDURE;
 			dummyName = "DummyProcedureName_".toLowerCase() + String.format("%03d", ++dummyCounter);
-		} else if (token.getText().compareTo("int") == 0 || token.getText().compareTo("float") == 0 || token.getText().compareTo("char") == 0 || token.getText().compareTo("bool") == 0) {
+		} else if (DATA_TYPE_SET.contains(routineType)) {
 			// need to parse return type...
 			VarDecParser varDecParser = new VarDecParser(this);
 			type = varDecParser.parseTypeSpec(token);
 			token = currentToken();
 			routineDefn = DefinitionImpl.FUNCTION;
 			dummyName = "DummyFunctionName_".toLowerCase() + String.format("%03d", ++dummyCounter);
-		} else
+		} else {
 			errorHandler.flag(token, UNEXPECTED_TOKEN, this);
+			return null;
+		}
 		// parse routine name
 		String name = token.getText();
 		routineId = parseRoutineName(token, dummyName);
@@ -57,9 +58,9 @@ public class RoutineParser extends DeclarationsParser {
 		else {
 			SymTab symtab = symTabStack.push();
 			routineId.setAttribute(ROUTINE_SYMTAB, symtab);
-			((SymTabImpl)symtab).funcname = name;
+			((SymTabImpl)symtab).setFuncName(name);
 			if (routineDefn == DefinitionImpl.FUNCTION)
-				((SymTabImpl)symtab).isfunc = true;
+				((SymTabImpl)symtab).setIsFunc(true);
 		}
 		// non forwarded procedure, add to parents list of routines
 		if (routineId.getAttribute(ROUTINE_CODE) != FORWARD) {
@@ -131,9 +132,9 @@ public class RoutineParser extends DeclarationsParser {
 	}
 
 	// sync set for formal parameter sublist
-	private static final EnumSet<CTokenType> PARAMETER_SET = EnumSet.of(LEFT_BRACE, IDENTIFIER, RIGHT_PAREN);
+	private static final EnumSet<CTokenType> PARAMETER_SET = EnumSet.of(INT, FLOAT, CHAR, RIGHT_PAREN);
 	// sync set for (
-	private static final EnumSet<CTokenType> LEFT_PAREN_SET = EnumSet.of(LEFT_BRACE, LEFT_PAREN, SEMICOLON);
+	private static final EnumSet<CTokenType> LEFT_PAREN_SET = EnumSet.of(LEFT_PAREN);
 
 	protected void parseFormalParameters(Token token, SymTabEntry routineId) throws Exception {
 		// parse formal parameters
@@ -144,7 +145,7 @@ public class RoutineParser extends DeclarationsParser {
 			token = synchronize(PARAMETER_SET);
 			TokenType tokenType = token.getType();
 			// loops to parse sublists of formal parameter declarations
-			while (tokenType == IDENTIFIER) {
+			while (DATA_TYPE_SET.contains(tokenType)) {
 				parms.addAll(parseParmSublist(token, routineId));
 				token = currentToken();
 				tokenType = token.getType();

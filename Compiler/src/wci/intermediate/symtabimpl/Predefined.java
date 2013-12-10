@@ -60,21 +60,21 @@ public class Predefined
     private static void initializeTypes(SymTabStack symTabStack)
     {
         // Type integer.
-        integerId = symTabStack.enterLocal("int");
+        integerId = symTabStack.enterLocal("integer");
         integerType = TypeFactory.createType(SCALAR);
         integerType.setIdentifier(integerId);
         integerId.setDefinition(DefinitionImpl.TYPE);
         integerId.setTypeSpec(integerType);
 
         // Type real.
-        realId = symTabStack.enterLocal("float");
+        realId = symTabStack.enterLocal("real");
         realType = TypeFactory.createType(SCALAR);
         realType.setIdentifier(realId);
         realId.setDefinition(DefinitionImpl.TYPE);
         realId.setTypeSpec(realType);
 
         // Type boolean.
-        booleanId = symTabStack.enterLocal("bool");
+        booleanId = symTabStack.enterLocal("boolean");
         booleanType = TypeFactory.createType(ENUMERATION);
         booleanType.setIdentifier(booleanId);
         booleanId.setDefinition(DefinitionImpl.TYPE);

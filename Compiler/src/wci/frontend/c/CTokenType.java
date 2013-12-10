@@ -7,7 +7,7 @@ import wci.frontend.TokenType;
 public enum CTokenType implements TokenType
 {
 	// reserved words
-	ELSE, FUNCTION, IF, PROCEDURE, PROGRAM, RETURN, WHILE,
+	ELSE, FUNCTION, IF, PROCEDURE, PROGRAM, RETURN, CHAR, FLOAT, INT, VOID, WHILE,
 
 	// special symbols
 	PLUS("+"), MINUS("-"), STAR("*"), SLASH("/"), MOD("%"),
@@ -16,7 +16,7 @@ public enum CTokenType implements TokenType
 	LEFT_PAREN("("), RIGHT_PAREN(")"), LEFT_BRACKET("["), RIGHT_BRACKET("]"), LEFT_BRACE("{"), RIGHT_BRACE("}"),
 	SINGLE_EQUALS("="), DOUBLE_EQUALS("=="), NOT("!"), NOT_EQUALS("!="), LESS_THAN("<"), LESS_EQUALS("<="),  GREATER_THAN(">"), GREATER_EQUALS(">="),
 
-	CHAR, IDENTIFIER, INT, FLOAT, VOID,
+	IDENTIFIER,
 	ERROR, END_OF_FILE;
 
 	private static final int FIRST_RESERVED_INDEX = ELSE.ordinal();
