@@ -29,7 +29,7 @@ public class Assignment extends StatementParser {
 		String targetname = token.getText();
 		if (targetname.equals("return") || isReturn) {
 			SymTab symtab = symTabStack.getLocalSymTab();
-			targetname = ((SymTabImpl)symtab).getFuncName();
+			targetname = ((SymTabImpl)symtab).getFunctionName();
 			if (targetname == null)
 				targetname = "unknownfunction";
 		}

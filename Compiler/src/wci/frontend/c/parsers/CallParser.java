@@ -134,7 +134,7 @@ public class CallParser extends StatementParser
                       )
                    )
                 {
-                    errorHandler.flag(token, INVALID_PARM, this);
+                    errorHandler.flag(token, INVALID_VAR_PARM, this);
                 }
             }
 
@@ -213,7 +213,7 @@ public class CallParser extends StatementParser
             if ((actualNode.getType() != ICodeNodeTypeImpl.VARIABLE) ||
                 (actualType != formalType))
             {
-                errorHandler.flag(token, INVALID_PARM, this);
+                errorHandler.flag(token, INVALID_VAR_PARM, this);
             }
         }
 

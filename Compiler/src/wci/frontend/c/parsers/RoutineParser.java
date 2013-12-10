@@ -58,9 +58,9 @@ public class RoutineParser extends DeclarationsParser {
 		else {
 			SymTab symtab = symTabStack.push();
 			routineId.setAttribute(ROUTINE_SYMTAB, symtab);
-			((SymTabImpl)symtab).setFuncName(name);
+			((SymTabImpl)symtab).setFunctionName(name);
 			if (routineDefn == DefinitionImpl.FUNCTION)
-				((SymTabImpl)symtab).setIsFunc(true);
+				((SymTabImpl)symtab).setIsFunction(true);
 		}
 		// non forwarded procedure, add to parents list of routines
 		if (routineId.getAttribute(ROUTINE_CODE) != FORWARD) {

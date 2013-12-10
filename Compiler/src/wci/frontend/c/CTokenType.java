@@ -12,7 +12,7 @@ public enum CTokenType implements TokenType
 	// special symbols
 	PLUS("+"), MINUS("-"), STAR("*"), SLASH("/"), MOD("%"),
 	AND("&&"), OR("||"),
-	COMMA(","), COLON(":"), SEMICOLON(";"), SINGLE_QUOTE("'"),
+	COMMA(","), COLON(":"), SEMICOLON(";"), SINGLE_QUOTE("'"), DOUBLE_QUOTE("\""),
 	LEFT_PAREN("("), RIGHT_PAREN(")"), LEFT_BRACKET("["), RIGHT_BRACKET("]"), LEFT_BRACE("{"), RIGHT_BRACE("}"),
 	SINGLE_EQUALS("="), DOUBLE_EQUALS("=="), NOT("!"), NOT_EQUALS("!="), LESS_THAN("<"), LESS_EQUALS("<="),  GREATER_THAN(">"), GREATER_EQUALS(">="),
 

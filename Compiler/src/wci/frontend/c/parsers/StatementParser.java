@@ -4,7 +4,6 @@ import java.util.EnumSet;
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
-import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
 import wci.intermediate.symtabimpl.*;
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
@@ -19,14 +18,14 @@ public class StatementParser extends CParserTD {
 	}
 
 	// sync set for start of statement
-	protected static final EnumSet<CTokenType> STMT_START_SET = EnumSet.of(LEFT_BRACE, CTokenType.IF, WHILE, IDENTIFIER, SEMICOLON, CTokenType.RETURN);
+	protected static final EnumSet<CTokenType> STMT_START_SET = EnumSet.of(LEFT_BRACE, CTokenType.IF, WHILE, IDENTIFIER, SEMICOLON);
 	// sync set for end of statement
 	protected static final EnumSet<CTokenType> STMT_FOLLOW_SET = EnumSet.of(SEMICOLON, RIGHT_BRACE);
 
 	public ICodeNode parse(Token token) throws Exception {
 		ICodeNode statementNode = null;
 		SymTab symTab = symTabStack.getLocalSymTab();
-		boolean hasreturned = ((SymTabImpl)symTab).getReturned();
+		boolean hasreturned = ((SymTabImpl)symTab).getReturnSeen();
 		if (!hasreturned) {
 			switch ((CTokenType) token.getType()) {
 				case LEFT_BRACE: {
@@ -76,7 +75,7 @@ public class StatementParser extends CParserTD {
 				}
 				case RETURN: {
 					symTab = symTabStack.getLocalSymTab();
-		        	boolean isfunc = ((SymTabImpl)symTab).getIsFunc();
+		        	boolean isfunc = ((SymTabImpl)symTab).getIsFunction();
 		        	if (isfunc) {
 						Assignment assignmentParser = new Assignment(this);
 				        statementNode = assignmentParser.parseReturn(token);
@@ -85,7 +84,7 @@ public class StatementParser extends CParserTD {
 						statementNode = ICodeFactory.createICodeNode(NO_OP);
 		        		token = nextToken();
 		        	}
-	        		((SymTabImpl)symTab).setReturned(true);
+	        		((SymTabImpl)symTab).setReturnSeen(true);
 					break;
 				}
 				default: {
@@ -109,6 +108,8 @@ public class StatementParser extends CParserTD {
 			node.setAttribute(LINE, token.getLineNumber());
 	}
 
+	protected static final EnumSet<CTokenType> DATA_TYPES = EnumSet.of(INT, FLOAT, CHAR);
+	
 	protected void parseList(Token token, ICodeNode parentNode, CTokenType terminator, CErrorCode errorCode) throws Exception {
 		// sync set for terminator
 		EnumSet<CTokenType> terminatorSet = STMT_START_SET.clone();
@@ -119,10 +120,11 @@ public class StatementParser extends CParserTD {
 			ICodeNode statementNode = parse(token);
 			parentNode.addChild(statementNode);
 			// sync at next statement or terminator
-			token = synchronize(terminatorSet);
+			token = currentToken();
 			// look for semicolon between statements
 			if (token.getType() == SEMICOLON)
 				token = nextToken(); // consume ;
+			// if at next statement w/o ; then error
 			//else
 			//	errorHandler.flag(token, MISSING_SEMICOLON, this);
 		}

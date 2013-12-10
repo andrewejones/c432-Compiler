@@ -53,6 +53,9 @@ public class CScanner extends Scanner
         else if (currentChar == '\'') {
             token = new CCharToken(source);
         }
+        else if (currentChar == '"') {
+            token = new CStringToken(source);
+        }
         else if (CTokenType.SPECIAL_SYMBOLS
                  .containsKey(Character.toString(currentChar))) {
             token = new CSpecialSymbolToken(source);

@@ -42,7 +42,7 @@ public class CSpecialSymbolToken extends CToken
 
             // Single-character special symbols.
             case '+':  case '-':  case '*':  case '/': case '%':
-            case '.': case ',': case ';':  case '\'':
+            case '.': case ',': case ';':  case '\'':  case '"':
             case '(':  case ')': case '[':  case ']':  case '{':  case '}': {
                 nextChar();  // consume character
                 break;

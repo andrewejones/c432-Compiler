@@ -7,7 +7,7 @@ int factorial(int num) {
 	fact = 1;
 	while (num > 1) {
 		fact = fact * num;
-		num = num - 1
+		num = num - 1;
 	}
 	return fact;
 	writeln(999999);
@@ -24,43 +24,12 @@ void main() {
 }
 
 void negativeerror() {
-	writeln('');
-	write('N');
-	write('e');
-	write('g');
-	write('a');
-	write('t');
-	write('i');
-	write('v');
-	write('e');
-	write(' ');
-	write('E');
-	write('r');
-	write('r');
-	write('o');
-	write('r');
-	write('!');
-	return;
-	writeln('!');
+	write("Error: negative numbers don't have factorials.");
 }
 
 void printfactorial(int num, int fact) {
-	writeln('');
-	write('F');
-	write('a');
-	write('c');
-	write('t');
-	write('o');
-	write('r');
-	write('i');
-	write('a');
-	write('l');
-	write(' ');
-	write('o');
-	write('f');
-	write(' ');
+	write("Factorial of ");
 	write(num);
-	write(':');
-	write(' ');
-	writeln(fact);
+	write(": ");
+	write(fact);
 }
