@@ -5,5 +5,5 @@ In order to compile a program:
 3) Run "3_run.bat" to run the .class file
 
 NOTES:
-- File must be named "test.c" and in this directory
-- 1_create.bat creates the .j then moved it to this directory
+- File must be in this directory
+- 1_create.bat creates the .j then moves it to this directory

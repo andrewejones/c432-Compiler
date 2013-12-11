@@ -26,14 +26,16 @@ import static wci.message.MessageType.PARSER_SUMMARY;
 public class CParserTD extends Parser
 {
     protected static CErrorHandler errorHandler = new CErrorHandler();
-
+    protected static String programName;
+    
     /**
      * Constructor.
      * @param scanner the scanner to be used with this parser.
      */
-    public CParserTD(Scanner scanner)
+    public CParserTD(Scanner scanner, String name)
     {
         super(scanner);
+        programName = name;
     }
 
     /**

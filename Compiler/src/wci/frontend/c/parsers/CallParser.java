@@ -2,21 +2,18 @@ package wci.frontend.c.parsers;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-
 import wci.frontend.*;
 import wci.frontend.c.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 import wci.intermediate.icodeimpl.*;
 import wci.intermediate.typeimpl.*;
-
 import static wci.frontend.c.CTokenType.*;
 import static wci.frontend.c.CErrorCode.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
 import static wci.intermediate.icodeimpl.ICodeNodeTypeImpl.*;
-import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 import static wci.intermediate.typeimpl.TypeFormImpl.*;
 
 /**

@@ -27,7 +27,7 @@ public class ProgramParser extends DeclarationsParser {
 
 	public SymTabEntry parse(Token token, SymTabEntry parentId) throws Exception {
 		// create dummy program named test
-		SymTabEntry routineId = symTabStack.enterLocal("test");
+		SymTabEntry routineId = symTabStack.enterLocal(programName);
 		routineId.setDefinition(DefinitionImpl.PROGRAM);
 		// create intermediate code for calling main()
 		ICode iCode = ICodeFactory.createICode();

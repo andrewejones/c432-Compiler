@@ -22,14 +22,14 @@ public class FrontendFactory
      * @throws Exception if an error occurred.
      */
     public static Parser createParser(String language, String type,
-                                      Source source)
+                                      Source source, String name)
         throws Exception
     {
         if (language.equalsIgnoreCase("C") &&
             type.equalsIgnoreCase("top-down"))
         {
             Scanner scanner = new CScanner(source);
-            return new CParserTD(scanner);
+            return new CParserTD(scanner, name);
         }
         else if (!language.equalsIgnoreCase("C")) {
             throw new Exception("Parser factory: Invalid language '" +

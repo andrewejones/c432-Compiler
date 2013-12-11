@@ -6,7 +6,6 @@ import wci.intermediate.*;
 import wci.backend.*;
 import wci.message.*;
 import wci.util.*;
-
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.message.MessageType.*;
 
@@ -50,11 +49,13 @@ public class C
             fetch        = flags.indexOf('f') > -1;
             call         = flags.indexOf('c') > -1;
             returnn      = flags.indexOf('r') > -1;
-
+            
+            String name = getName(filePath);
+            
             source = new Source(new BufferedReader(new FileReader(filePath)));
             source.addMessageListener(new SourceMessageListener());
 
-            parser = FrontendFactory.createParser("C", "top-down", source);
+            parser = FrontendFactory.createParser("C", "top-down", source, name);
             parser.addMessageListener(new ParserMessageListener());
 
             backend = BackendFactory.createBackend(operation);
@@ -362,4 +363,11 @@ public class C
             }
         }
     }
+
+    private String getName(String path) {
+    	int index1 = path.lastIndexOf('\\');
+    	int index2 = path.lastIndexOf('.') == -1 ? path.length():path.lastIndexOf('.');
+    	return path.substring(index1+1, index2);  
+    }
+
 }
